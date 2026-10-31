@@ -1,0 +1,11 @@
+{
+  "stand": "2026-10-31",
+  "begleitungen": [
+    { "id": "b1", "status": "anfrage", "schule": "Gymnasium A", "gruppe": "Fachschaft Geschichte", "thema": "Quellenarbeit mit KI", "anliegen": "Wie können Lernende mit KI Quellen kritisch prüfen?", "eingang": "vernetzt@dlh.zh.ch", "eingangsdatum": "2026-10-20", "person": "", "etl": false, "treffen": 0, "ergebnis": "", "beispiel": true },
+    { "id": "b2", "status": "klaerung", "schule": "Berufsfachschule B", "gruppe": "ABU-Team", "thema": "KI-gestützte Schreibaufträge", "anliegen": "", "eingang": "Beratung an Schule", "eingangsdatum": "2026-10-02", "person": "Christoph Glaus", "etl": true, "treffen": 0, "ergebnis": "", "beispiel": true },
+    { "id": "b3", "status": "umsetzung", "schule": "Gymnasium C", "gruppe": "Fachschaft Biologie", "thema": "KI-Assistent für Laborprotokolle", "anliegen": "", "eingang": "DLH-Person", "eingangsdatum": "2026-09-01", "person": "Pascal Schmidt", "etl": true, "treffen": 2, "ergebnis": "", "beispiel": true },
+    { "id": "b4", "status": "umsetzung", "schule": "Mittelschule D", "gruppe": "Fachschaft Deutsch", "thema": "Feedback-Assistent zur Maturarbeit", "anliegen": "", "eingang": "DLH-Person", "eingangsdatum": "2026-09-15", "person": "Justine Burkhalter", "etl": true, "treffen": 1, "ergebnis": "", "beispiel": true },
+    { "id": "b5", "status": "abgeschlossen", "schule": "Gymnasium E", "gruppe": "Fachschaft Französisch", "thema": "Sprechtraining mit KI-Assistent", "anliegen": "", "eingang": "vernetzt@dlh.zh.ch", "eingangsdatum": "2026-05-10", "person": "Ricarda Reimer", "etl": true, "treffen": 4, "ergebnis": "", "beispiel": true },
+    { "id": "b6", "status": "geteilt", "schule": "Gymnasium F", "gruppe": "Fachschaft Chemie", "thema": "KI-Assistent zur Sicherheitsunterweisung", "anliegen": "", "eingang": "DLH-Person", "eingangsdatum": "2026-03-01", "person": "Pascal Schmidt", "etl": true, "treffen": 4, "ergebnis": "Assistent auf Fobizz (Link folgt)", "beispiel": true }
+  ]
+}

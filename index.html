@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DLH@School Schaufenster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: Kopf mit Kurzbeschrieb → Kanban (5 Spalten = Prozessphasen) → Ablauf, Angebot, Team, Kontakt */
+:root{
+  --bg:#FAFAF9; --surface:#FFFFFF; --sunk:#F1EFEC; --line:#E2DED9;
+  --fg:#262422; --muted:#6B655F; --accent:#EC6608; --accent-ink:#B44C00; --accent-soft:#FDE8D9;
+  --violet:#7A4E9A; --violet-soft:#EFE7F5;
+  --s-anfrage:#8C857E; --s-klaerung:#C98A00; --s-umsetzung:#EC6608; --s-abgeschlossen:#2F7D5B; --s-geteilt:#7A4E9A;
+  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", Arial, sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#171615; --surface:#22201E; --sunk:#1C1B19; --line:#36322F;
+  --fg:#EFEBE7; --muted:#A79F98; --accent:#FF8A3D; --accent-ink:#FFB27D; --accent-soft:#3A2618;
+  --violet:#C29BE0; --violet-soft:#2E2436;
+  --s-anfrage:#A79F98; --s-klaerung:#E6B33A; --s-umsetzung:#FF8A3D; --s-abgeschlossen:#5FBF92; --s-geteilt:#C29BE0;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#171615; --surface:#22201E; --sunk:#1C1B19; --line:#36322F;
+  --fg:#EFEBE7; --muted:#A79F98; --accent:#FF8A3D; --accent-ink:#FFB27D; --accent-soft:#3A2618;
+  --violet:#C29BE0; --violet-soft:#2E2436;
+  --s-anfrage:#A79F98; --s-klaerung:#E6B33A; --s-umsetzung:#FF8A3D; --s-abgeschlossen:#5FBF92; --s-geteilt:#C29BE0;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:1320px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+a{color:var(--accent-ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header{padding-block:36px 24px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:32px;align-items:end;border-bottom:1px solid var(--line)}
+.brand{font:700 13px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--violet);margin-bottom:14px}
+h1{font-size:clamp(32px,5vw,54px);font-weight:800;line-height:1.02}
+h1 .at{color:var(--accent)}
+.sub{font:600 clamp(18px,2.2vw,23px)/1.25 var(--display);color:var(--muted);margin-top:8px}
+.lead{max-width:62ch;color:var(--fg);margin:0}
+.lead strong{font-weight:700}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:0;list-style:none}
+.facts li{font-size:14px;padding:4px 10px;border-radius:999px;background:var(--sunk);border:1px solid var(--line)}
+
+.notice{margin-top:20px;display:flex;gap:10px;align-items:flex-start;font-size:14px;background:var(--accent-soft);color:var(--fg);border-radius:var(--r);padding:10px 14px}
+.notice b{color:var(--accent-ink)}
+
+.boardhead{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;margin:32px 0 14px}
+.boardhead h2{font-size:24px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters label{font-size:13px;color:var(--muted)}
+select,input[type=search]{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-width:0}
+input[type=search]{width:200px}
+
+.board{overflow-x:auto;padding-bottom:6px}
+.cols{display:grid;grid-template-columns:repeat(5,minmax(230px,1fr));gap:14px;min-width:min(100%,1200px)}
+.col{background:var(--sunk);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.colhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:2px 2px 6px;border-bottom:2px solid var(--st)}
+.colhead h3{font-size:16px;font-weight:700}
+.colhead .n{font:700 14px var(--display);color:var(--st);font-variant-numeric:tabular-nums}
+.colhint{font-size:12.5px;color:var(--muted);line-height:1.35;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card .school{font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
+.card .ex{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border:1px dashed var(--line);border-radius:4px;padding:0 5px;white-space:nowrap}
+.card h4{margin:0;font:700 15.5px/1.25 var(--display)}
+.card .grp{font-size:14px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.chip{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--violet-soft);color:var(--violet);font-weight:600}
+.chip.pchip{background:var(--sunk);color:var(--fg);font-weight:400;border:1px solid var(--line)}
+.progress{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--muted)}
+.progress i{width:18px;height:6px;border-radius:3px;background:var(--line)}
+.progress i.on{background:var(--accent)}
+.result{font-size:13px;color:var(--accent-ink);font-weight:600}
+.empty{font-size:13px;color:var(--muted);font-style:italic;padding:6px 2px}
+
+section.info{margin-top:44px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:28px}
+.info h2{font-size:22px;margin-bottom:12px}
+.steps{grid-column:span 7;min-width:0}
+.offer{grid-column:span 5;min-width:0}
+ol.flow{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:s}
+ol.flow li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+ol.flow li:last-child{border-bottom:1px solid var(--line)}
+ol.flow li::before{counter-increment:s;content:counter(s);font:800 22px/1 var(--display);color:var(--accent)}
+ol.flow b{display:block;font-family:var(--display)}
+ol.flow span{color:var(--muted);font-size:15px}
+ol.flow em{font-style:normal;font-size:12px;color:var(--st);font-weight:700;margin-left:6px}
+.yesno{display:grid;gap:14px}
+.yesno div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.yesno h3{font-size:15px;margin-bottom:6px}
+.yesno ul{margin:0;padding-left:18px;font-size:15px}
+.yesno li+li{margin-top:4px}
+
+.team{grid-column:span 7;min-width:0}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.person{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface)}
+.person b{font-family:var(--display);font-size:15px;display:block}
+.person span{font-size:13.5px;color:var(--muted)}
+.contact{grid-column:span 5;min-width:0}
+.mail{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:700 20px var(--display);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.mail code{font:inherit;user-select:all;color:var(--accent-ink)}
+button{font:600 14px var(--body);border:1px solid var(--accent);color:var(--accent-ink);background:transparent;border-radius:8px;padding:5px 12px;cursor:pointer}
+button:hover{background:var(--accent-soft)}
+.small{font-size:14px;color:var(--muted);margin-top:10px}
+footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:space-between}
+
+@media (max-width:900px){
+  header{grid-template-columns:1fr;gap:14px}
+  .steps,.offer,.team,.contact{grid-column:1/-1}
+}
+@media (max-width:560px){ input[type=search]{width:100%} .filters{width:100%} }
+@media (prefers-reduced-motion:no-preference){ .card{transition:transform .15s ease, box-shadow .15s ease} .card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06)} }
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-ink);border-color:var(--accent-ink)}
+.editbar{display:none;margin-top:14px;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;background:var(--violet-soft);border-radius:var(--r);padding:8px 12px}
+body.editing .editbar{display:flex}
+.editbar .who{font-weight:700;color:var(--violet)}
+.editonly{display:none!important}
+body.editing .editonly{display:inline-flex!important}
+body.editing .card{cursor:grab}
+body.editing .card:active{cursor:grabbing}
+.card.dragging{opacity:.4}
+.col.over{outline:2px dashed var(--st);outline-offset:-2px}
+.card .anl{font-size:13.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .date{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.linkbtn{border:0;padding:0;background:none;color:var(--muted);text-decoration:underline;font-weight:400;font-size:13px}
+.linkbtn:hover{background:none;color:var(--fg)}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 32px)}
+dialog::backdrop{background:rgba(20,18,16,.45)}
+dialog form{padding:20px 22px;display:grid;gap:12px}
+dialog h2{font-size:21px}
+.field{display:grid;gap:4px;min-width:0}
+.field label,.field .lbl{font-size:13.5px;font-weight:600}
+.field input,.field select,.field textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+.field textarea{min-height:70px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.check{display:flex;gap:8px;align-items:center;font-size:14.5px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.warn{font-size:13px;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-top:4px}
+.actions .right{display:flex;gap:8px;margin-left:auto}
+.btn-danger{border-color:#B3261E;color:#B3261E}
+.err{color:#B3261E;font-size:13.5px;margin:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:14px;z-index:50}
+@media (max-width:560px){.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <div class="brand">Digital Learning Hub Sek II</div>
+    <h1>DLH<span class="at">@</span>School</h1>
+    <div class="sub">Fachschaftsberatung und -begleitung</div>
+  </div>
+  <div>
+    <p class="lead">Wir begleiten <strong>Fachschaften und Lehrpersonengruppen</strong> der Sek II des Kantons Zürich direkt an ihrer Schule beim Einsatz digitaler Hilfsmittel im Unterricht. Pädagogik steuert die Technik.</p>
+    <ul class="facts"><li>freiwillig</li><li>kostenlos</li><li>ca. 3 Monate</li><li>Hilfe zur Selbsthilfe</li><li>Ergebnisse für alle Schulen</li></ul>
+  </div>
+</header>
+
+<div class="notice" role="note"><b>Entwurf</b><span>Karten mit «Beispiel» sind Beispieldaten, keine echten Begleitungen. Ob Schulen öffentlich genannt werden, ist noch zu klären.</span></div>
+<div class="editbar" role="status"><span>Bearbeitungsmodus · angemeldet als <span class="who" id="who"></span></span><span class="hint">Karten ziehen, um den Status zu ändern. Karte anklicken zum Bearbeiten. Jede Änderung wird sofort gespeichert und ist öffentlich sichtbar.</span><button type="button" class="linkbtn" id="logout">Abmelden</button></div>
+
+<div class="boardhead">
+  <h2>Begleitungen im Überblick</h2>
+  <div class="filters">
+    <label for="f-person">Begleitperson</label>
+    <select id="f-person"><option value="">Alle</option></select>
+    <label for="f-q" class="sr">Suche</label>
+    <input id="f-q" type="search" placeholder="Fach, Thema, Schule …">
+    <button type="button" class="btn-primary editonly" id="new">+ Neue Anfrage</button>
+  </div>
+</div>
+<div class="board"><div class="cols" id="cols"></div></div>
+
+<section class="info">
+  <div class="steps">
+    <h2>So läuft eine Begleitung</h2>
+    <ol class="flow" id="flow"></ol>
+  </div>
+  <div class="offer">
+    <h2>Was wir anbieten</h2>
+    <div class="yesno">
+      <div><h3>Dafür sind wir da</h3><ul>
+        <li>Fachschaften und Lehrpersonengruppen, die mit digitalen Hilfsmitteln im Unterricht starten möchten</li>
+        <li>Themen nach Bedarf der Gruppe, eher im Basisbereich</li>
+        <li>Aktuell zum Beispiel: KI-Assistenten für den Fachunterricht auf Fobizz</li>
+      </ul></div>
+      <div><h3>Dafür gibt es andere Wege</h3><ul>
+        <li>Weiterbildungen für eine ganze Schule (z. B. SchiLW-Tage): Wir klären das zuerst mit den Hochschulen.</li>
+        <li>Begleitung von Einzelpersonen</li>
+        <li>Reine Bedienungsfragen: Dafür verweisen wir auf bestehende Tutorials.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="team">
+    <h2>Das Team</h2>
+    <div class="people" id="people"></div>
+  </div>
+  <div class="contact">
+    <h2>Anfrage stellen</h2>
+    <div class="mail"><code id="mail">vernetzt@dlh.zh.ch</code><button type="button" id="copy">Adresse kopieren</button></div>
+    <p class="small">Schreiben Sie uns kurz, welche Gruppe Sie sind und was Sie im Unterricht erreichen möchten. Wir melden uns für ein Erstgespräch. Bitte informieren Sie Ihre Entwicklungsteamleitung.</p>
+  </div>
+</section>
+
+<footer><span>DLH@School · Schaufenster nach innen und aussen</span><span><span id="stand"></span> · <button type="button" class="linkbtn" id="login">Team-Login</button></span></footer>
+</div>
+
+
+<dialog id="dlg-login"><form method="dialog" id="f-login">
+  <h2>Team-Login</h2>
+  <p class="hint">Nur für DLH-Mitarbeitende mit Schreibrecht auf das GitHub-Repository. Melden Sie sich mit Ihrem persönlichen Zugangstoken (Fine-grained token, Berechtigung «Contents: Read and write» nur für dieses Repository) an.</p>
+  <div class="field"><label for="l-token">GitHub-Token</label><input id="l-token" type="password" autocomplete="off" required placeholder="github_pat_…"></div>
+  <label class="check"><input type="checkbox" id="l-remember"> Auf diesem Gerät angemeldet bleiben</label>
+  <p class="err" id="l-err" hidden></p>
+  <div class="actions"><div class="right"><button type="button" data-close>Abbrechen</button><button class="btn-primary" type="submit" id="l-go">Anmelden</button></div></div>
+</form></dialog>
+
+<dialog id="dlg-card"><form method="dialog" id="f-card">
+  <h2 id="c-title">Neue Anfrage</h2>
+  <p class="warn">Alles, was hier steht, ist öffentlich sichtbar. Keine Namen von Lehrpersonen und keine Kontaktdaten erfassen; diese gehören in die Jahresübersicht.</p>
+  <div class="row2">
+    <div class="field"><label for="c-schule">Schule *</label><input id="c-schule" required list="schulen" autocomplete="off"></div>
+    <div class="field"><label for="c-gruppe">Fachschaft / Gruppe *</label><input id="c-gruppe" required placeholder="z. B. Fachschaft Biologie"></div>
+  </div>
+  <div class="field"><label for="c-thema">Thema *</label><input id="c-thema" required placeholder="z. B. KI-Assistent für Laborprotokolle"></div>
+  <div class="field"><label for="c-anliegen">Anliegen (kurz)</label><textarea id="c-anliegen" maxlength="300" placeholder="Was möchte die Gruppe im Unterricht erreichen?"></textarea></div>
+  <div class="row2">
+    <div class="field"><label for="c-eingang">Eingang über</label><select id="c-eingang"><option>vernetzt@dlh.zh.ch</option><option>DLH-Person</option><option>Beratung an Schule</option></select></div>
+    <div class="field"><label for="c-datum">Eingangsdatum</label><input id="c-datum" type="date"></div>
+  </div>
+  <div class="row2">
+    <div class="field"><label for="c-person">Begleitperson</label><select id="c-person"></select></div>
+    <div class="field"><label for="c-status">Status</label><select id="c-status"></select></div>
+  </div>
+  <div class="row2" id="c-more">
+    <div class="field"><label for="c-treffen">Treffen durchgeführt</label><select id="c-treffen"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+    <div class="field"><label for="c-ergebnis">Ergebnis / Link</label><input id="c-ergebnis" placeholder="sobald geteilt"></div>
+  </div>
+  <label class="check"><input type="checkbox" id="c-etl"> Entwicklungsteamleitung ist informiert</label>
+  <label class="check"><input type="checkbox" id="c-beispiel"> Beispielkarte</label>
+  <p class="err" id="c-err" hidden></p>
+  <div class="actions"><button type="button" class="btn-danger" id="c-del">Löschen</button><div class="right"><button type="button" data-close>Abbrechen</button><button class="btn-primary" type="submit" id="c-save">Speichern</button></div></div>
+</form></dialog>
+<datalist id="schulen"></datalist>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+/* ===== Konfiguration: hier das GitHub-Repository eintragen ===== */
+const CONFIG = {
+  owner: "aapdinternet",          // GitHub-Account oder Organisation
+  repo: "dlh-at-school",          // Name des Repositorys
+  branch: "main",
+  path: "data/begleitungen.json"  // Datei mit den Karten
+};
+/* ===== Inhalte, die selten ändern ===== */
+const TEAM = [
+  ["Alexander Wilhelm","Bereichsleitung Weiterbildung"],
+  ["Pascal Schmidt","KI-Assistenten, Fobizz"],
+  ["Christoph Glaus","Schulorganisation, PICTS, BB, ABU"],
+  ["Justine Burkhalter","PICTS, Geschichte, Sprachen, Maturarbeit"],
+  ["Ricarda Reimer","Fobizz, Beratung"],
+  ["Silvia Mensing","Fobizz"],
+  ["Madelaine Wetli","Schwerpunkte folgen"],
+];
+const SPALTEN = [
+  { id:"anfrage", name:"Anfrage", hint:"Bedarf ist eingegangen, Erstgespräch wird vereinbart." },
+  { id:"klaerung", name:"In Klärung", hint:"Ziele und Umfang werden geklärt, Entscheid durch die Bereichsleitung." },
+  { id:"umsetzung", name:"In Umsetzung", hint:"Richtwert: ca. 4 Treffen in ca. 3 Monaten." },
+  { id:"abgeschlossen", name:"Abgeschlossen", hint:"Gemeinsam ausgewertet. Nachfrage nach 3 Monaten." },
+  { id:"geteilt", name:"Geteilt", hint:"Ergebnis steht allen Schulen zur Verfügung." },
+];
+const ABLAUF = [
+  ["Anfrage","Eine Fachschaft meldet ihren Bedarf über eine DLH-Person oder per E-Mail.","anfrage"],
+  ["Klärung","Im Erstgespräch klären wir Thema, Ziele und Umfang, wenn möglich mit der Entwicklungsteamleitung.","klaerung"],
+  ["Entscheid","Die Bereichsleitung Weiterbildung priorisiert. Anliegen für ganze Schulen gehen an die Hochschulen.","klaerung"],
+  ["Umsetzung","Wir arbeiten gemeinsam auf Fobizz, die Gruppe erprobt im Unterricht.","umsetzung"],
+  ["Abschluss","Wir reflektieren und werten die Zusammenarbeit gemeinsam aus.","abgeschlossen"],
+  ["Verwertung","Nach drei Monaten fragen wir nach. Gute Ergebnisse teilen wir mit allen Schulen.","geteilt"],
+];
+
+/* ===== Ab hier Programmlogik ===== */
+const API = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
+const TOKEN_KEY = "dlhschool.token";
+const S = { data:{ stand:"", begleitungen:[] }, sha:null, token:null, user:null, editId:null };
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const stVar = id => `var(--s-${id})`;
+const today = () => new Date().toISOString().slice(0,10);
+const fmtDate = d => d ? d.split("-").reverse().join(".") : "";
+const b64enc = s => btoa(unescape(encodeURIComponent(s)));
+const b64dec = s => decodeURIComponent(escape(atob(s.replace(/\n/g,""))));
+
+function store(k, v, persist){
+  for (const st of [localStorage, sessionStorage]) { try { st.removeItem(k); } catch {} }
+  if (v == null) return;
+  try { (persist ? localStorage : sessionStorage).setItem(k, v); } catch {}
+}
+function recall(k){
+  for (const st of [sessionStorage, localStorage]) { try { const v = st.getItem(k); if (v) return v; } catch {} }
+  return null;
+}
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast._t); toast._t = setTimeout(()=> t.hidden = true, 3200);
+}
+
+/* ---- GitHub ---- */
+async function gh(url, opts = {}){
+  const r = await fetch(url, { ...opts, headers:{ "Accept":"application/vnd.github+json", "Authorization":`Bearer ${S.token}`, ...(opts.headers||{}) }});
+  if (!r.ok) { const e = new Error(`GitHub ${r.status}`); e.status = r.status; throw e; }
+  return r.json();
+}
+async function loadFromGitHub(){
+  const j = await gh(`${API}/contents/${CONFIG.path}?ref=${CONFIG.branch}&t=${Date.now()}`);
+  S.sha = j.sha; S.data = JSON.parse(b64dec(j.content));
+}
+async function loadPublic(){
+  try {
+    const r = await fetch(`${CONFIG.path}?t=${Date.now()}`, { cache:"no-store" });
+    if (!r.ok) throw new Error(r.status);
+    S.data = await r.json();
+  } catch {
+    S.data = { stand:"", begleitungen:[] };
+    toast("Daten konnten nicht geladen werden.");
+  }
+}
+/* Änderung anwenden und speichern: holt zuerst den neusten Stand, damit parallele Änderungen nicht verloren gehen */
+async function commit(mutate, message){
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await loadFromGitHub();
+    mutate(S.data.begleitungen);
+    S.data.stand = today();
+    const body = { message: message + " (via Schaufenster)", content: b64enc(JSON.stringify(S.data, null, 2) + "\n"), sha: S.sha, branch: CONFIG.branch };
+    try {
+      const j = await gh(`${API}/contents/${CONFIG.path}`, { method:"PUT", body: JSON.stringify(body) });
+      S.sha = j.content.sha; render(); toast("Gespeichert"); return true;
+    } catch (e) {
+      if ((e.status === 409 || e.status === 422) && attempt === 0) continue; // jemand war schneller: neu laden, nochmals
+      await loadFromGitHub().catch(()=>{}); render();
+      toast(e.status === 401 || e.status === 403 ? "Keine Schreibberechtigung. Bitte neu anmelden." : "Speichern fehlgeschlagen. Bitte nochmals versuchen.");
+      return false;
+    }
+  }
+}
+
+/* ---- Anmeldung ---- */
+async function login(token, remember){
+  S.token = token;
+  const repo = await gh(API);
+  if (!repo.permissions || !repo.permissions.push) { S.token = null; const e = new Error("nopush"); e.status = 403; throw e; }
+  let user = null; try { user = (await gh("https://api.github.com/user")).login; } catch {}
+  S.user = user || "Team";
+  store(TOKEN_KEY, token, remember);
+  await loadFromGitHub();
+  document.body.classList.add("editing");
+  $("#who").textContent = S.user;
+  $("#login").hidden = true;
+  render();
+}
+function logout(){
+  S.token = null; S.user = null; store(TOKEN_KEY, null);
+  document.body.classList.remove("editing"); $("#login").hidden = false; render();
+  toast("Abgemeldet");
+}
+
+/* ---- Darstellung ---- */
+function card(b){
+  const prog = (b.status === "umsetzung" && b.treffen)
+    ? `<div class="progress" aria-label="Treffen ${b.treffen} von 4">${[1,2,3,4].map(i=>`<i class="${i<=b.treffen?"on":""}"></i>`).join("")}<span>Treffen ${b.treffen}/4</span></div>` : "";
+  const edit = document.body.classList.contains("editing");
+  return `<article class="card" data-id="${esc(b.id)}" ${edit ? 'draggable="true" tabindex="0" role="button" aria-label="Karte bearbeiten: '+esc(b.thema)+'"' : ""}>
+    <div class="school"><span>${esc(b.schule)}</span>${b.beispiel ? '<span class="ex">Beispiel</span>' : ""}</div>
+    <h4>${esc(b.thema)}</h4>
+    <div class="grp">${esc(b.gruppe)}</div>
+    ${b.anliegen ? `<div class="anl">${esc(b.anliegen)}</div>` : ""}
+    ${prog}
+    ${b.ergebnis ? `<div class="result">${esc(b.ergebnis)}</div>` : ""}
+    <div class="meta"><span class="chip pchip">${b.person ? esc(b.person) : "Begleitperson offen"}</span>${b.eingangsdatum ? `<span class="date">seit ${fmtDate(b.eingangsdatum)}</span>` : ""}</div>
+  </article>`;
+}
+function render(){
+  const list0 = S.data.begleitungen || [];
+  const sel = $("#f-person"), cur = sel.value;
+  sel.innerHTML = '<option value="">Alle</option>' + [...new Set(list0.map(b=>b.person).filter(Boolean))].sort().map(n=>`<option>${esc(n)}</option>`).join("");
+  sel.value = cur;
+  const p = sel.value, q = $("#f-q").value.trim().toLowerCase();
+  const list = list0.filter(b => (!p || b.person === p) &&
+    (!q || [b.schule,b.gruppe,b.thema,b.person,b.anliegen].join(" ").toLowerCase().includes(q)));
+  $("#cols").innerHTML = SPALTEN.map(s => {
+    const items = list.filter(b => b.status === s.id);
+    return `<section class="col" data-status="${s.id}" style="--st:${stVar(s.id)}" aria-label="${s.name}">
+      <div class="colhead"><h3>${s.name}</h3><span class="n">${items.length}</span></div>
+      <p class="colhint">${s.hint}</p>
+      ${items.length ? items.map(card).join("") : '<div class="empty">Keine Begleitung in dieser Phase.</div>'}
+    </section>`;
+  }).join("");
+  $("#stand").textContent = S.data.stand ? "Stand " + fmtDate(S.data.stand) : "";
+  $("#schulen").innerHTML = [...new Set(list0.map(b=>b.schule))].map(s=>`<option value="${esc(s)}">`).join("");
+}
+
+/* ---- Ziehen und Ablegen ---- */
+let dragId = null;
+$("#cols").addEventListener("dragstart", e => {
+  const c = e.target.closest(".card"); if (!c || !S.token) return;
+  dragId = c.dataset.id; c.classList.add("dragging"); e.dataTransfer.effectAllowed = "move";
+  try { e.dataTransfer.setData("text/plain", dragId); } catch {}
+});
+$("#cols").addEventListener("dragend", e => { e.target.closest(".card")?.classList.remove("dragging"); document.querySelectorAll(".col.over").forEach(c=>c.classList.remove("over")); });
+$("#cols").addEventListener("dragover", e => { const col = e.target.closest(".col"); if (!col || !dragId) return; e.preventDefault(); document.querySelectorAll(".col.over").forEach(c=>c!==col&&c.classList.remove("over")); col.classList.add("over"); });
+$("#cols").addEventListener("drop", async e => {
+  const col = e.target.closest(".col"); if (!col || !dragId) return; e.preventDefault(); col.classList.remove("over");
+  const id = dragId, to = col.dataset.status; dragId = null;
+  const b = S.data.begleitungen.find(x=>x.id===id); if (!b || b.status === to) return;
+  const name = SPALTEN.find(s=>s.id===to).name;
+  b.status = to; render(); // sofort anzeigen, dann speichern
+  await commit(list => { const x = list.find(y=>y.id===id); if (x) x.status = to; }, `Karte «${b.thema}» → ${name}`);
+});
+
+/* ---- Karte bearbeiten / neue Anfrage ---- */
+const F = id => $("#c-" + id);
+function openCard(id){
+  const b = id ? S.data.begleitungen.find(x=>x.id===id) : null;
+  S.editId = b ? b.id : null;
+  $("#c-title").textContent = b ? "Karte bearbeiten" : "Neue Anfrage";
+  F("schule").value = b?.schule || ""; F("gruppe").value = b?.gruppe || ""; F("thema").value = b?.thema || "";
+  F("anliegen").value = b?.anliegen || ""; F("eingang").value = b?.eingang || "vernetzt@dlh.zh.ch";
+  F("datum").value = b?.eingangsdatum || today(); F("person").value = b?.person || "";
+  F("status").value = b?.status || "anfrage"; F("treffen").value = String(b?.treffen || 0);
+  F("ergebnis").value = b?.ergebnis || ""; F("etl").checked = !!b?.etl; F("beispiel").checked = !!b?.beispiel;
+  F("status").disabled = !b;  // neue Anfragen landen immer in «Anfrage»
+  $("#c-more").hidden = !b;
+  const del = F("del"); del.hidden = !b; del.textContent = "Löschen"; del.dataset.armed = "";
+  F("err").hidden = true;
+  $("#dlg-card").showModal(); F(b ? "thema" : "schule").focus();
+}
+$("#new").addEventListener("click", () => openCard(null));
+$("#cols").addEventListener("click", e => { const c = e.target.closest(".card"); if (c && S.token) openCard(c.dataset.id); });
+$("#cols").addEventListener("keydown", e => { const c = e.target.closest(".card"); if (c && S.token && (e.key==="Enter"||e.key===" ")) { e.preventDefault(); openCard(c.dataset.id); } });
+
+$("#f-card").addEventListener("submit", async e => {
+  e.preventDefault();
+  const v = {
+    schule:F("schule").value.trim(), gruppe:F("gruppe").value.trim(), thema:F("thema").value.trim(),
+    anliegen:F("anliegen").value.trim(), eingang:F("eingang").value, eingangsdatum:F("datum").value,
+    person:F("person").value, etl:F("etl").checked, beispiel:F("beispiel").checked,
+  };
+  const btn = F("save"); btn.disabled = true; btn.textContent = "Speichere …";
+  let ok;
+  if (S.editId) {
+    Object.assign(v, { status:F("status").value, treffen:+F("treffen").value, ergebnis:F("ergebnis").value.trim() });
+    const id = S.editId;
+    ok = await commit(list => { const x = list.find(y=>y.id===id); if (x) Object.assign(x, v); }, `Karte «${v.thema}» bearbeitet`);
+  } else {
+    const nb = { id:"b" + Date.now().toString(36), status:"anfrage", treffen:0, ergebnis:"", ...v };
+    ok = await commit(list => list.push(nb), `Neue Anfrage: ${v.gruppe}, ${v.schule}`);
+  }
+  btn.disabled = false; btn.textContent = "Speichern";
+  if (ok) $("#dlg-card").close();
+});
+F("del").addEventListener("click", async () => {
+  const del = F("del");
+  if (!del.dataset.armed) { del.dataset.armed = "1"; del.textContent = "Wirklich löschen?"; return; }
+  const id = S.editId, t = F("thema").value;
+  if (await commit(list => { const i = list.findIndex(y=>y.id===id); if (i>=0) list.splice(i,1); }, `Karte «${t}» gelöscht`)) $("#dlg-card").close();
+});
+
+/* ---- Login-Dialog ---- */
+$("#login").addEventListener("click", () => { $("#l-err").hidden = true; $("#dlg-login").showModal(); $("#l-token").focus(); });
+$("#logout").addEventListener("click", logout);
+$("#f-login").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("#l-go"); btn.disabled = true; btn.textContent = "Prüfe …";
+  try { await login($("#l-token").value.trim(), $("#l-remember").checked); $("#l-token").value = ""; $("#dlg-login").close(); toast("Angemeldet"); }
+  catch (err) {
+    const m = $("#l-err"); m.hidden = false;
+    m.textContent = err.status === 401 ? "Das Token ist ungültig oder abgelaufen."
+      : err.status === 403 || err.status === 404 ? "Dieses Token hat keine Schreibberechtigung für das Repository."
+      : "Anmeldung nicht möglich. Bitte Verbindung prüfen.";
+  }
+  btn.disabled = false; btn.textContent = "Anmelden";
+});
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
+
+/* ---- Statische Teile ---- */
+$("#c-person").innerHTML = '<option value="">offen</option>' + TEAM.map(([n])=>`<option>${esc(n)}</option>`).join("");
+$("#c-status").innerHTML = SPALTEN.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
+$("#flow").innerHTML = ABLAUF.map(([t,d,s]) => `<li style="--st:${stVar(s)}"><div><b>${t}<em>${SPALTEN.find(x=>x.id===s).name}</em></b><span>${d}</span></div></li>`).join("");
+$("#people").innerHTML = TEAM.map(([n,f])=>`<div class="person"><b>${esc(n)}</b><span>${esc(f)}</span></div>`).join("");
+$("#f-person").addEventListener("change", render);
+$("#f-q").addEventListener("input", render);
+$("#copy").addEventListener("click", async () => {
+  const btn = $("#copy");
+  try { await navigator.clipboard.writeText($("#mail").textContent); btn.textContent = "Kopiert"; }
+  catch { const r = document.createRange(); r.selectNodeContents($("#mail")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); btn.textContent = "Markiert – mit Ctrl+C kopieren"; }
+  setTimeout(()=>btn.textContent = "Adresse kopieren", 2500);
+});
+
+/* ---- Start ---- */
+(async () => {
+  const t = recall(TOKEN_KEY);
+  if (t) { try { await login(t, !!(()=>{try{return localStorage.getItem(TOKEN_KEY)}catch{return null}})()); return; } catch { store(TOKEN_KEY, null); S.token = null; } }
+  await loadPublic(); render();
+})();
+</script>
+</body>
+</html>
