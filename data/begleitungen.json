@@ -71,10 +71,10 @@
       "eingang": "vernetzt@dlh.zh.ch",
       "eingangsdatum": "2026-05-10",
       "person": "Ricarda Reimer",
-      "etl": true,
+      "etl": false,
       "treffen": 4,
       "ergebnis": "",
-      "beispiel": true
+      "beispiel": false
     },
     {
       "id": "b6",
