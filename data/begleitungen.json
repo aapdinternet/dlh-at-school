@@ -18,7 +18,7 @@
     },
     {
       "id": "b2",
-      "status": "anfrage",
+      "status": "klaerung",
       "schule": "Berufsfachschule B",
       "gruppe": "ABU-Team",
       "thema": "KI-gestützte Schreibaufträge",
