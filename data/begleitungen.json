@@ -1,5 +1,5 @@
 {
-  "stand": "2026-10-31",
+  "stand": "2026-11-02",
   "begleitungen": [
     {
       "id": "b1",
@@ -78,7 +78,7 @@
     },
     {
       "id": "b6",
-      "status": "umsetzung",
+      "status": "abgeschlossen",
       "schule": "Gymnasium F",
       "gruppe": "Fachschaft Chemie",
       "thema": "KI-Assistent zur Sicherheitsunterweisung",
