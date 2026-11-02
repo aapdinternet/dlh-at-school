@@ -3,7 +3,7 @@
   "begleitungen": [
     {
       "id": "b1",
-      "status": "klaerung",
+      "status": "anfrage",
       "schule": "Gymnasium A",
       "gruppe": "Fachschaft Geschichte",
       "thema": "Quellenarbeit mit KI",
