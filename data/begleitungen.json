@@ -90,6 +90,21 @@
       "treffen": 4,
       "ergebnis": "Assistent auf Fobizz (Link folgt)",
       "beispiel": true
+    },
+    {
+      "id": "bmvz4gnsb",
+      "status": "anfrage",
+      "treffen": 0,
+      "ergebnis": "",
+      "schule": "dsfsdafsd",
+      "gruppe": "fsadfdsadfs",
+      "thema": "asdfa",
+      "anliegen": "asdfasd",
+      "eingang": "vernetzt@dlh.zh.ch",
+      "eingangsdatum": "2026-11-02",
+      "person": "Ricarda Reimer",
+      "etl": false,
+      "beispiel": false
     }
   ]
 }
