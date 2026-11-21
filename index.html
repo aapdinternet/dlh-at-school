@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de-CH">
 <head>
 <meta charset="utf-8">
@@ -7,12 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
 <style>
-/* Layout: Kopf mit Kurzbeschrieb → Kanban (5 Spalten = Prozessphasen) → Ablauf, Angebot, Team, Kontakt */
+/* Layout: Kopf → Kennzahlen + Phasenbalken → Filter → Board (5 Spalten = Phasen) oder Liste → Ablauf, Angebot, Team, Kontakt */
 :root{
   --bg:#FAFAF9; --surface:#FFFFFF; --sunk:#F1EFEC; --line:#E2DED9;
   --fg:#262422; --muted:#6B655F; --accent:#EC6608; --accent-ink:#B44C00; --accent-soft:#FDE8D9;
-  --violet:#7A4E9A; --violet-soft:#EFE7F5;
-  --s-anfrage:#8C857E; --s-klaerung:#C98A00; --s-umsetzung:#EC6608; --s-abgeschlossen:#2F7D5B; --s-geteilt:#7A4E9A;
+  --violet:#7A4E9A; --violet-soft:#EFE7F5; --teal:#1F6F78; --teal-soft:#E0F0F1;
+  --s-anfrage:#8C857E; --s-p1:#C98A00; --s-p2:#EC6608; --s-p3:#7A4E9A; --s-abschluss:#2F7D5B;
   --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
   --body:"Source Sans 3", "Segoe UI", Arial, sans-serif;
   --r:10px;
@@ -20,17 +20,17 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#171615; --surface:#22201E; --sunk:#1C1B19; --line:#36322F;
   --fg:#EFEBE7; --muted:#A79F98; --accent:#FF8A3D; --accent-ink:#FFB27D; --accent-soft:#3A2618;
-  --violet:#C29BE0; --violet-soft:#2E2436;
-  --s-anfrage:#A79F98; --s-klaerung:#E6B33A; --s-umsetzung:#FF8A3D; --s-abgeschlossen:#5FBF92; --s-geteilt:#C29BE0;
+  --violet:#C29BE0; --violet-soft:#2E2436; --teal:#6CC3CC; --teal-soft:#16302F;
+  --s-anfrage:#A79F98; --s-p1:#E6B33A; --s-p2:#FF8A3D; --s-p3:#C29BE0; --s-abschluss:#5FBF92;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#171615; --surface:#22201E; --sunk:#1C1B19; --line:#36322F;
   --fg:#EFEBE7; --muted:#A79F98; --accent:#FF8A3D; --accent-ink:#FFB27D; --accent-soft:#3A2618;
-  --violet:#C29BE0; --violet-soft:#2E2436;
-  --s-anfrage:#A79F98; --s-klaerung:#E6B33A; --s-umsetzung:#FF8A3D; --s-abgeschlossen:#5FBF92; --s-geteilt:#C29BE0;
+  --violet:#C29BE0; --violet-soft:#2E2436; --teal:#6CC3CC; --teal-soft:#16302F;
+  --s-anfrage:#A79F98; --s-p1:#E6B33A; --s-p2:#FF8A3D; --s-p3:#C29BE0; --s-abschluss:#5FBF92;
   color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
 .wrap{max-width:1320px;margin:0 auto}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
@@ -43,59 +43,91 @@ header{padding-block:36px 24px;display:grid;grid-template-columns:minmax(0,1.4fr
 h1{font-size:clamp(32px,5vw,54px);font-weight:800;line-height:1.02}
 h1 .at{color:var(--accent)}
 .sub{font:600 clamp(18px,2.2vw,23px)/1.25 var(--display);color:var(--muted);margin-top:8px}
-.lead{max-width:62ch;color:var(--fg);margin:0}
+.lead{max-width:62ch;margin:0}
 .lead strong{font-weight:700}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:0;list-style:none}
 .facts li{font-size:14px;padding:4px 10px;border-radius:999px;background:var(--sunk);border:1px solid var(--line)}
 
-.notice{margin-top:20px;display:flex;gap:10px;align-items:flex-start;font-size:14px;background:var(--accent-soft);color:var(--fg);border-radius:var(--r);padding:10px 14px}
-.notice b{color:var(--accent-ink)}
+/* Kennzahlen */
+.overview{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:24px;align-items:stretch}
+.overview h2{font-size:24px;margin-bottom:4px}
+.overview .src{font-size:13px;color:var(--muted);margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.stat b{display:block;font:800 30px/1.05 var(--display);font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.phasebox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:12px;justify-content:center}
+.phasebox h3{font-size:15px}
+.bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--sunk);gap:2px}
+.bar span{background:var(--st);min-width:0}
+.legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
+.legend li{font-size:13px;line-height:1.25;border-top:3px solid var(--st);padding-top:6px;min-width:0}
+.legend b{display:block;font:800 20px/1.1 var(--display);font-variant-numeric:tabular-nums}
 
-.boardhead{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;margin:32px 0 14px}
+/* Filter */
+.boardhead{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:32px 0 14px}
 .boardhead h2{font-size:24px}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.filters label{font-size:13px;color:var(--muted)}
 select,input[type=search]{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-width:0}
-input[type=search]{width:200px}
+input[type=search]{width:190px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;border-radius:0;background:transparent;color:var(--fg);font:600 14px var(--body);padding:6px 11px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.count{font-size:13px;color:var(--muted);margin:-6px 0 12px}
 
+/* Board */
 .board{overflow-x:auto;padding-bottom:6px}
-.cols{display:grid;grid-template-columns:repeat(5,minmax(230px,1fr));gap:14px;min-width:min(100%,1200px)}
+.cols{display:grid;grid-template-columns:repeat(5,minmax(228px,1fr));gap:14px;min-width:min(100%,1200px)}
 .col{background:var(--sunk);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .colhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:2px 2px 6px;border-bottom:2px solid var(--st)}
 .colhead h3{font-size:16px;font-weight:700}
 .colhead .n{font:700 14px var(--display);color:var(--st);font-variant-numeric:tabular-nums}
 .colhint{font-size:12.5px;color:var(--muted);line-height:1.35;margin:0}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.card .school{font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
-.card .ex{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border:1px dashed var(--line);border-radius:4px;padding:0 5px;white-space:nowrap}
-.card h4{margin:0;font:700 15.5px/1.25 var(--display)}
+.card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--st);border-radius:8px;padding:11px 12px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.card .top{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.card h4{margin:0;font:700 15px/1.25 var(--display)}
 .card .grp{font-size:14px}
-.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
-.chip{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--violet-soft);color:var(--violet);font-weight:600}
-.chip.pchip{background:var(--sunk);color:var(--fg);font-weight:400;border:1px solid var(--line)}
-.progress{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--muted)}
-.progress i{width:18px;height:6px;border-radius:3px;background:var(--line)}
-.progress i.on{background:var(--accent)}
-.result{font-size:13px;color:var(--accent-ink);font-weight:600}
+.meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.chip{font-size:12px;padding:1px 8px;border-radius:999px;background:var(--sunk);border:1px solid var(--line);color:var(--fg);white-space:nowrap}
+.stufe{font:700 11px/1 var(--display);letter-spacing:.06em;padding:3px 6px;border-radius:4px}
+.stufe.BB{background:var(--teal-soft);color:var(--teal)}
+.stufe.MS{background:var(--violet-soft);color:var(--violet)}
+.steps-mini{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--muted);margin-top:2px}
+.steps-mini i{width:16px;height:5px;border-radius:3px;background:var(--line);flex:none}
+.steps-mini i.on{background:var(--st)}
+.steps-mini span{margin-left:4px;min-width:0}
+.note{font-size:13px;color:var(--muted);font-style:italic;line-height:1.35}
 .empty{font-size:13px;color:var(--muted);font-style:italic;padding:6px 2px}
 
+/* Liste */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:860px;font-size:14.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 13px var(--display);color:var(--muted);background:var(--sunk);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td .ph{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+td .ph::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--st)}
+td.thema{font-weight:600}
+[hidden]{display:none !important}
+
+/* Info-Bereich */
 section.info{margin-top:44px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:28px}
 .info h2{font-size:22px;margin-bottom:12px}
 .steps{grid-column:span 7;min-width:0}
 .offer{grid-column:span 5;min-width:0}
-ol.flow{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:s}
+ol.flow{list-style:none;margin:0;padding:0;display:grid;counter-reset:s}
 ol.flow li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid var(--line)}
 ol.flow li:last-child{border-bottom:1px solid var(--line)}
-ol.flow li::before{counter-increment:s;content:counter(s);font:800 22px/1 var(--display);color:var(--accent)}
+ol.flow li::before{counter-increment:s;content:counter(s);font:800 22px/1 var(--display);color:var(--st)}
 ol.flow b{display:block;font-family:var(--display)}
 ol.flow span{color:var(--muted);font-size:15px}
-ol.flow em{font-style:normal;font-size:12px;color:var(--st);font-weight:700;margin-left:6px}
+ol.flow em{font-style:normal;font-size:12px;color:var(--muted);font-weight:600;margin-left:6px}
 .yesno{display:grid;gap:14px}
 .yesno div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
 .yesno h3{font-size:15px;margin-bottom:6px}
 .yesno ul{margin:0;padding-left:18px;font-size:15px}
 .yesno li+li{margin-top:4px}
-
 .team{grid-column:span 7;min-width:0}
 .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .person{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface)}
@@ -104,22 +136,27 @@ ol.flow em{font-style:normal;font-size:12px;color:var(--st);font-weight:700;marg
 .contact{grid-column:span 5;min-width:0}
 .mail{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:700 20px var(--display);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
 .mail code{font:inherit;user-select:all;color:var(--accent-ink)}
-button{font:600 14px var(--body);border:1px solid var(--accent);color:var(--accent-ink);background:transparent;border-radius:8px;padding:5px 12px;cursor:pointer}
-button:hover{background:var(--accent-soft)}
+#copy{font:600 14px var(--body);border:1px solid var(--accent);color:var(--accent-ink);background:transparent;border-radius:8px;padding:5px 12px;cursor:pointer}
+#copy:hover{background:var(--accent-soft)}
 .small{font-size:14px;color:var(--muted);margin-top:10px}
 footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:space-between}
 
 @media (max-width:900px){
-  header{grid-template-columns:1fr;gap:14px}
+  header,.overview{grid-template-columns:1fr;gap:14px}
   .steps,.offer,.team,.contact{grid-column:1/-1}
 }
-@media (max-width:560px){ input[type=search]{width:100%} .filters{width:100%} }
+@media (max-width:560px){
+  input[type=search]{width:100%} .filters{width:100%}
+  .legend{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 @media (prefers-reduced-motion:no-preference){ .card{transition:transform .15s ease, box-shadow .15s ease} .card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06)} }
 
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+/* ---- Bearbeitungsmodus ---- */
+.btn-primary{font:600 14px var(--body);background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:8px;padding:6px 12px;cursor:pointer}
 .btn-primary:hover{background:var(--accent-ink);border-color:var(--accent-ink)}
-.editbar{display:none;margin-top:14px;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;background:var(--violet-soft);border-radius:var(--r);padding:8px 12px}
+.btn{font:600 14px var(--body);border:1px solid var(--line);color:var(--fg);background:var(--surface);border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn:hover{background:var(--sunk)}
+.editbar{display:none;margin-top:20px;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;background:var(--violet-soft);border-radius:var(--r);padding:8px 12px}
 body.editing .editbar{display:flex}
 .editbar .who{font-weight:700;color:var(--violet)}
 .editonly{display:none!important}
@@ -128,25 +165,24 @@ body.editing .card{cursor:grab}
 body.editing .card:active{cursor:grabbing}
 .card.dragging{opacity:.4}
 .col.over{outline:2px dashed var(--st);outline-offset:-2px}
-.card .anl{font-size:13.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .date{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.linkbtn{border:0;padding:0;background:none;color:var(--muted);text-decoration:underline;font-weight:400;font-size:13px}
-.linkbtn:hover{background:none;color:var(--fg)}
-dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 32px)}
+.result{font-size:13px;color:var(--accent-ink);font-weight:600;overflow-wrap:anywhere}
+.linkbtn{border:0;padding:0;background:none;color:var(--muted);text-decoration:underline;font:400 13px var(--body);cursor:pointer}
+.linkbtn:hover{color:var(--fg)}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);padding:0;width:min(580px,calc(100vw - 32px));max-height:calc(100vh - 32px)}
 dialog::backdrop{background:rgba(20,18,16,.45)}
 dialog form{padding:20px 22px;display:grid;gap:12px}
 dialog h2{font-size:21px}
 .field{display:grid;gap:4px;min-width:0}
-.field label,.field .lbl{font-size:13.5px;font-weight:600}
+.field label{font-size:13.5px;font-weight:600}
 .field input,.field select,.field textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
-.field textarea{min-height:70px;resize:vertical}
+.field textarea{min-height:60px;resize:vertical}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .check{display:flex;gap:8px;align-items:center;font-size:14.5px}
 .hint{font-size:13px;color:var(--muted);margin:0}
 .warn{font-size:13px;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:0}
 .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-top:4px}
 .actions .right{display:flex;gap:8px;margin-left:auto}
-.btn-danger{border-color:#B3261E;color:#B3261E}
+.btn-danger{font:600 14px var(--body);background:transparent;border:1px solid #B3261E;color:#B3261E;border-radius:8px;padding:6px 12px;cursor:pointer}
 .err{color:#B3261E;font-size:13.5px;margin:0}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:14px;z-index:50}
 @media (max-width:560px){.row2{grid-template-columns:1fr}}
@@ -166,20 +202,50 @@ dialog h2{font-size:21px}
   </div>
 </header>
 
-<div class="notice" role="note"><b>Entwurf</b><span>Karten mit «Beispiel» sind Beispieldaten, keine echten Begleitungen. Ob Schulen öffentlich genannt werden, ist noch zu klären.</span></div>
-<div class="editbar" role="status"><span>Bearbeitungsmodus · angemeldet als <span class="who" id="who"></span></span><span class="hint">Karten ziehen, um den Status zu ändern. Karte anklicken zum Bearbeiten. Jede Änderung wird sofort gespeichert und ist öffentlich sichtbar.</span><button type="button" class="linkbtn" id="logout">Abmelden</button></div>
+<div class="editbar" role="status"><span>Bearbeitungsmodus · angemeldet als <span class="who" id="who"></span></span><span class="hint">Karten ziehen, um die Phase zu ändern. Karte anklicken zum Bearbeiten. Jede Änderung wird sofort gespeichert und ist öffentlich sichtbar.</span><button type="button" class="linkbtn" id="logout">Abmelden</button></div>
+
+<section class="overview" aria-label="Übersicht">
+  <div>
+    <h2>KI-Assistenten für Fachschaften</h2>
+    <p class="src" id="src"></p>
+    <div class="stats" id="stats"></div>
+  </div>
+  <div class="phasebox">
+    <h3>Wo stehen die Begleitungen?</h3>
+    <div class="bar" id="bar" role="img"></div>
+    <ul class="legend" id="legend"></ul>
+  </div>
+</section>
 
 <div class="boardhead">
   <h2>Begleitungen im Überblick</h2>
   <div class="filters">
-    <label for="f-person">Begleitperson</label>
-    <select id="f-person"><option value="">Alle</option></select>
-    <label for="f-q" class="sr">Suche</label>
-    <input id="f-q" type="search" placeholder="Fach, Thema, Schule …">
     <button type="button" class="btn-primary editonly" id="new">+ Neue Anfrage</button>
+    <div class="seg" role="group" aria-label="Stufe" id="f-stufe">
+      <button type="button" data-v="" aria-pressed="true">Alle</button>
+      <button type="button" data-v="BB" aria-pressed="false">Berufsbildung</button>
+      <button type="button" data-v="MS" aria-pressed="false">Mittelschule</button>
+    </div>
+    <label for="f-bereich" class="sr">Bereich</label>
+    <select id="f-bereich"></select>
+    <label for="f-schule" class="sr">Schule</label>
+    <select id="f-schule"></select>
+    <label for="f-q" class="sr">Suche</label>
+    <input id="f-q" type="search" placeholder="Fach, Thema …">
+    <div class="seg" role="group" aria-label="Ansicht" id="f-view">
+      <button type="button" data-v="board" aria-pressed="true">Board</button>
+      <button type="button" data-v="list" aria-pressed="false">Liste</button>
+    </div>
   </div>
 </div>
-<div class="board"><div class="cols" id="cols"></div></div>
+<p class="count" id="count" aria-live="polite"></p>
+<div class="board" id="view-board"><div class="cols" id="cols"></div></div>
+<div class="tablewrap" id="view-list" hidden>
+  <table>
+    <thead><tr><th>Stufe</th><th>Schule</th><th>Fachgruppe</th><th>Thema</th><th>Bereich</th><th>Für</th><th>Aktueller Schritt</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
 
 <section class="info">
   <div class="steps">
@@ -215,54 +281,74 @@ dialog h2{font-size:21px}
 <footer><span>DLH@School · Schaufenster nach innen und aussen</span><span><span id="stand"></span> · <button type="button" class="linkbtn" id="login">Team-Login</button></span></footer>
 </div>
 
-
 <dialog id="dlg-login"><form method="dialog" id="f-login">
   <h2>Team-Login</h2>
-  <p class="hint">Nur für DLH-Mitarbeitende mit Schreibrecht auf das GitHub-Repository. Melden Sie sich mit Ihrem persönlichen Zugangstoken (Fine-grained token, Berechtigung «Contents: Read and write» nur für dieses Repository) an.</p>
+  <p class="hint">Nur für DLH-Mitarbeitende mit Schreibrecht auf das GitHub-Repository. Melden Sie sich mit Ihrem persönlichen Zugangstoken an (Fine-grained token, Berechtigung «Contents: Read and write», nur für dieses Repository).</p>
   <div class="field"><label for="l-token">GitHub-Token</label><input id="l-token" type="password" autocomplete="off" required placeholder="github_pat_…"></div>
   <label class="check"><input type="checkbox" id="l-remember"> Auf diesem Gerät angemeldet bleiben</label>
   <p class="err" id="l-err" hidden></p>
-  <div class="actions"><div class="right"><button type="button" data-close>Abbrechen</button><button class="btn-primary" type="submit" id="l-go">Anmelden</button></div></div>
+  <div class="actions"><div class="right"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn-primary" type="submit" id="l-go">Anmelden</button></div></div>
 </form></dialog>
 
 <dialog id="dlg-card"><form method="dialog" id="f-card">
   <h2 id="c-title">Neue Anfrage</h2>
-  <p class="warn">Alles, was hier steht, ist öffentlich sichtbar. Keine Namen von Lehrpersonen und keine Kontaktdaten erfassen; diese gehören in die Jahresübersicht.</p>
+  <p class="warn">Alles, was hier steht, ist öffentlich sichtbar. Keine Namen von Lehrpersonen, keine Kontaktdaten und keine internen Bemerkungen erfassen; diese gehören in die Planungsübersicht (Excel).</p>
   <div class="row2">
-    <div class="field"><label for="c-schule">Schule *</label><input id="c-schule" required list="schulen" autocomplete="off"></div>
-    <div class="field"><label for="c-gruppe">Fachschaft / Gruppe *</label><input id="c-gruppe" required placeholder="z. B. Fachschaft Biologie"></div>
+    <div class="field"><label for="c-stufe">Stufe *</label><select id="c-stufe"><option value="BB">Berufsbildung (BB)</option><option value="MS">Mittelschule (MS)</option></select></div>
+    <div class="field"><label for="c-schule">Schule (Kürzel) *</label><input id="c-schule" required list="schulen" autocomplete="off" placeholder="z. B. KWI"></div>
   </div>
-  <div class="field"><label for="c-thema">Thema *</label><input id="c-thema" required placeholder="z. B. KI-Assistent für Laborprotokolle"></div>
-  <div class="field"><label for="c-anliegen">Anliegen (kurz)</label><textarea id="c-anliegen" maxlength="300" placeholder="Was möchte die Gruppe im Unterricht erreichen?"></textarea></div>
+  <div class="field"><label for="c-gruppe">Fachgruppe *</label><input id="c-gruppe" required placeholder="z. B. Biologie"></div>
+  <div class="field"><label for="c-thema">Thema *</label><input id="c-thema" required placeholder="z. B. Übungs-Assistent indirekte Rede"></div>
   <div class="row2">
-    <div class="field"><label for="c-eingang">Eingang über</label><select id="c-eingang"><option>vernetzt@dlh.zh.ch</option><option>DLH-Person</option><option>Beratung an Schule</option></select></div>
-    <div class="field"><label for="c-datum">Eingangsdatum</label><input id="c-datum" type="date"></div>
+    <div class="field"><label for="c-bereich">Bereich</label><select id="c-bereich"></select></div>
+    <div class="field"><label for="c-ziel">Für</label><select id="c-ziel"></select></div>
   </div>
-  <div class="row2">
-    <div class="field"><label for="c-person">Begleitperson</label><select id="c-person"></select></div>
-    <div class="field"><label for="c-status">Status</label><select id="c-status"></select></div>
-  </div>
-  <div class="row2" id="c-more">
-    <div class="field"><label for="c-treffen">Treffen durchgeführt</label><select id="c-treffen"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
-    <div class="field"><label for="c-ergebnis">Ergebnis / Link</label><input id="c-ergebnis" placeholder="sobald geteilt"></div>
-  </div>
-  <label class="check"><input type="checkbox" id="c-etl"> Entwicklungsteamleitung ist informiert</label>
-  <label class="check"><input type="checkbox" id="c-beispiel"> Beispielkarte</label>
+  <div class="field"><label for="c-phase">Aktueller Schritt</label><select id="c-phase"></select></div>
+  <div class="field"><label for="c-notiz">Kurznotiz (öffentlich, optional)</label><input id="c-notiz" maxlength="120" placeholder="z. B. Erstgespräch am 1. Dezember 2026"></div>
+  <div class="field"><label for="c-ergebnis">Ergebnis / Link (sobald geteilt)</label><input id="c-ergebnis" placeholder="https://…"></div>
   <p class="err" id="c-err" hidden></p>
-  <div class="actions"><button type="button" class="btn-danger" id="c-del">Löschen</button><div class="right"><button type="button" data-close>Abbrechen</button><button class="btn-primary" type="submit" id="c-save">Speichern</button></div></div>
+  <div class="actions"><button type="button" class="btn-danger" id="c-del">Löschen</button><div class="right"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn-primary" type="submit" id="c-save">Speichern</button></div></div>
 </form></dialog>
 <datalist id="schulen"></datalist>
 <div class="toast" id="toast" hidden role="status"></div>
-
 <script>
-/* ===== Konfiguration: hier das GitHub-Repository eintragen ===== */
+/* ===== Konfiguration: GitHub-Repository ===== */
 const CONFIG = {
   owner: "aapdinternet",          // GitHub-Account oder Organisation
   repo: "dlh-at-school",          // Name des Repositorys
   branch: "main",
   path: "data/begleitungen.json"  // Datei mit den Karten
 };
-/* ===== Inhalte, die selten ändern ===== */
+/* ===== Inhalte, die selten ändern =====
+   Die Karten selbst liegen in data/begleitungen.json und werden über «Team-Login» bearbeitet.
+   Felder einer Karte: id, stufe ("BB"|"MS"), schule, gruppe, thema, bereich, ziel, phase, notiz, ergebnis */
+const QUELLE = "Planungsübersicht KI-Assistenten, Team DLH@School";
+const SCHULEN = { KWI:"Kantonsschule Wiedikon" };   // optional: Kürzel ausschreiben
+const BEREICHE = {
+  "1a":"Fachübergreifend – Fokusthema", "1b":"Fachübergreifend",
+  "2":"Sprachen", "3":"MINT", "":"Bereich offen"
+};
+const ZIELGRUPPEN = { "":"offen", LP:"Lehrpersonen", SuS:"Lernende", beide:"Lernende & Lehrpersonen" };
+const SPALTEN = [
+  { id:"anfrage",   name:"Anfrage",               hint:"Bedarf ist eingegangen, Erstgespräch wird vereinbart.", schritte:["0"] },
+  { id:"p1",        name:"Spezifizieren & bauen", hint:"Ziele klären, erster Prototyp (V1) entsteht.",          schritte:["1.1","1.2","M1"] },
+  { id:"p2",        name:"Testen & verbessern",   hint:"Prototyp gemeinsam besprechen und optimieren.",         schritte:["2.1","2.2","M2"] },
+  { id:"p3",        name:"Im Unterricht",          hint:"Version 2 im realen Einsatz, Feedback, Version 3.",     schritte:["3.1","3.2","M3","3.3"] },
+  { id:"abschluss", name:"Abgeschlossen",          hint:"Ausgewertet. Ergebnisse stehen allen Schulen offen.",   schritte:["abschluss"] },
+];
+const PHASEN = {
+  "0":"Anfrage", "1.1":"Spezifizierung", "1.2":"Entwicklung Prototyp", "M1":"Milestone 1",
+  "2.1":"Prototyp V1 besprechen", "2.2":"Optimierungen", "M2":"Milestone 2",
+  "3.1":"Go-Live V2", "3.2":"Feedback & Anpassungen", "M3":"Milestone 3", "3.3":"Go-Live V3",
+  "abschluss":"Abgeschlossen"
+};
+const ABLAUF = [
+  ["Anfrage & Erstgespräch","Eine Fachschaft meldet ihren Bedarf. Im Erstgespräch klären wir Thema, Ziele und Umfang; die Bereichsleitung Weiterbildung priorisiert.","anfrage"],
+  ["Spezifizieren & bauen","Gemeinsam halten wir fest, was der KI-Assistent können soll. Das DLH baut einen ersten Prototyp auf Fobizz.","p1"],
+  ["Testen & verbessern","Die Gruppe probiert den Prototyp aus, wir besprechen ihn und verbessern ihn.","p2"],
+  ["Im Unterricht","Version 2 kommt im Unterricht zum Einsatz. Aus den Rückmeldungen entsteht Version 3.","p3"],
+  ["Abschluss & teilen","Wir werten die Zusammenarbeit aus. Gute Ergebnisse teilen wir mit allen Schulen.","abschluss"],
+];
 const TEAM = [
   ["Alexander Wilhelm","Bereichsleitung Weiterbildung"],
   ["Pascal Schmidt","KI-Assistenten, Fobizz"],
@@ -272,26 +358,12 @@ const TEAM = [
   ["Silvia Mensing","Fobizz"],
   ["Madelaine Wetli","Schwerpunkte folgen"],
 ];
-const SPALTEN = [
-  { id:"anfrage", name:"Anfrage", hint:"Bedarf ist eingegangen, Erstgespräch wird vereinbart." },
-  { id:"klaerung", name:"In Klärung", hint:"Ziele und Umfang werden geklärt, Entscheid durch die Bereichsleitung." },
-  { id:"umsetzung", name:"In Umsetzung", hint:"Richtwert: ca. 4 Treffen in ca. 3 Monaten." },
-  { id:"abgeschlossen", name:"Abgeschlossen", hint:"Gemeinsam ausgewertet. Nachfrage nach 3 Monaten." },
-  { id:"geteilt", name:"Geteilt", hint:"Ergebnis steht allen Schulen zur Verfügung." },
-];
-const ABLAUF = [
-  ["Anfrage","Eine Fachschaft meldet ihren Bedarf über eine DLH-Person oder per E-Mail.","anfrage"],
-  ["Klärung","Im Erstgespräch klären wir Thema, Ziele und Umfang, wenn möglich mit der Entwicklungsteamleitung.","klaerung"],
-  ["Entscheid","Die Bereichsleitung Weiterbildung priorisiert. Anliegen für ganze Schulen gehen an die Hochschulen.","klaerung"],
-  ["Umsetzung","Wir arbeiten gemeinsam auf Fobizz, die Gruppe erprobt im Unterricht.","umsetzung"],
-  ["Abschluss","Wir reflektieren und werten die Zusammenarbeit gemeinsam aus.","abgeschlossen"],
-  ["Verwertung","Nach drei Monaten fragen wir nach. Gute Ergebnisse teilen wir mit allen Schulen.","geteilt"],
-];
 
 /* ===== Ab hier Programmlogik ===== */
 const API = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const TOKEN_KEY = "dlhschool.token";
 const S = { data:{ stand:"", begleitungen:[] }, sha:null, token:null, user:null, editId:null };
+const state = { stufe:"", bereich:"", schule:"", q:"", view:"board" };
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
@@ -300,14 +372,17 @@ const today = () => new Date().toISOString().slice(0,10);
 const fmtDate = d => d ? d.split("-").reverse().join(".") : "";
 const b64enc = s => btoa(unescape(encodeURIComponent(s)));
 const b64dec = s => decodeURIComponent(escape(atob(s.replace(/\n/g,""))));
+const ORDER = Object.keys(PHASEN);
+const colOf = b => SPALTEN.find(s => s.schritte.includes(b.phase)) || SPALTEN[0];
+const editing = () => document.body.classList.contains("editing");
 
 function store(k, v, persist){
-  for (const st of [localStorage, sessionStorage]) { try { st.removeItem(k); } catch {} }
+  for (const st of ["localStorage","sessionStorage"]) { try { window[st].removeItem(k); } catch {} }
   if (v == null) return;
-  try { (persist ? localStorage : sessionStorage).setItem(k, v); } catch {}
+  try { window[persist ? "localStorage" : "sessionStorage"].setItem(k, v); } catch {}
 }
 function recall(k){
-  for (const st of [sessionStorage, localStorage]) { try { const v = st.getItem(k); if (v) return v; } catch {} }
+  for (const st of ["sessionStorage","localStorage"]) { try { const v = window[st].getItem(k); if (v) return v; } catch {} }
   return null;
 }
 function toast(msg){
@@ -375,41 +450,107 @@ function logout(){
 }
 
 /* ---- Darstellung ---- */
+function all(){ return S.data.begleitungen || []; }
+function filtered(){
+  const q = state.q.toLowerCase();
+  return all().filter(b =>
+    (!state.stufe || b.stufe === state.stufe) &&
+    (!state.bereich || (b.bereich||"") === state.bereich) &&
+    (!state.schule || b.schule === state.schule) &&
+    (!q || [b.schule, SCHULEN[b.schule], b.gruppe, b.thema, BEREICHE[b.bereich||""], b.notiz].join(" ").toLowerCase().includes(q)));
+}
+function stepsMini(b, col){
+  if (col.schritte.length < 2) return "";
+  const i = col.schritte.indexOf(b.phase);
+  return `<div class="steps-mini" aria-label="Schritt ${i+1} von ${col.schritte.length}: ${esc(PHASEN[b.phase])}">
+    ${col.schritte.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("")}<span>${esc(PHASEN[b.phase])}</span></div>`;
+}
+function ergebnis(b){
+  if (!b.ergebnis) return "";
+  return /^https?:\/\//.test(b.ergebnis)
+    ? `<a class="result" href="${esc(b.ergebnis)}" target="_blank" rel="noopener">Zum Ergebnis →</a>`
+    : `<div class="result">${esc(b.ergebnis)}</div>`;
+}
 function card(b){
-  const prog = (b.status === "umsetzung" && b.treffen)
-    ? `<div class="progress" aria-label="Treffen ${b.treffen} von 4">${[1,2,3,4].map(i=>`<i class="${i<=b.treffen?"on":""}"></i>`).join("")}<span>Treffen ${b.treffen}/4</span></div>` : "";
-  const edit = document.body.classList.contains("editing");
-  return `<article class="card" data-id="${esc(b.id)}" ${edit ? 'draggable="true" tabindex="0" role="button" aria-label="Karte bearbeiten: '+esc(b.thema)+'"' : ""}>
-    <div class="school"><span>${esc(b.schule)}</span>${b.beispiel ? '<span class="ex">Beispiel</span>' : ""}</div>
+  const col = colOf(b);
+  const schule = SCHULEN[b.schule] ? `<abbr title="${esc(SCHULEN[b.schule])}">${esc(b.schule)}</abbr>` : esc(b.schule);
+  const z = ZIELGRUPPEN[b.ziel||""];
+  return `<article class="card" data-id="${esc(b.id)}" style="--st:${stVar(col.id)}" ${editing() ? 'draggable="true" tabindex="0" role="button" aria-label="Karte bearbeiten: '+esc(b.thema)+'"' : ""}>
+    <div class="top"><span>${schule}</span><span class="stufe ${esc(b.stufe)}" title="${b.stufe==="BB"?"Berufsbildung":"Mittelschule"}">${esc(b.stufe)}</span></div>
     <h4>${esc(b.thema)}</h4>
     <div class="grp">${esc(b.gruppe)}</div>
-    ${b.anliegen ? `<div class="anl">${esc(b.anliegen)}</div>` : ""}
-    ${prog}
-    ${b.ergebnis ? `<div class="result">${esc(b.ergebnis)}</div>` : ""}
-    <div class="meta"><span class="chip pchip">${b.person ? esc(b.person) : "Begleitperson offen"}</span>${b.eingangsdatum ? `<span class="date">seit ${fmtDate(b.eingangsdatum)}</span>` : ""}</div>
+    ${stepsMini(b, col)}
+    ${b.notiz ? `<div class="note">${esc(b.notiz)}</div>` : ""}
+    ${ergebnis(b)}
+    <div class="meta"><span class="chip">${esc(BEREICHE[b.bereich||""])}</span>${b.ziel ? `<span class="chip">für ${esc(z)}</span>` : ""}</div>
   </article>`;
 }
+function renderOverview(list){
+  const n = list.length, bb = list.filter(b=>b.stufe==="BB").length;
+  const schulen = new Set(list.map(b=>b.schule)).size;
+  $("#stats").innerHTML = [[n,"Begleitungen"],[schulen, schulen===1?"Schule":"Schulen"],[`${bb} / ${n-bb}`,"Berufsbildung / Mittelschule"]]
+    .map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("");
+  const per = SPALTEN.map(s => ({ s, c:list.filter(b=>colOf(b).id===s.id).length }));
+  $("#bar").innerHTML = per.filter(p=>p.c).map(p=>`<span style="--st:${stVar(p.s.id)};flex:${p.c}" title="${p.s.name}: ${p.c}"></span>`).join("");
+  $("#bar").setAttribute("aria-label", per.map(p=>`${p.s.name}: ${p.c}`).join(", "));
+  $("#legend").innerHTML = per.map(p=>`<li style="--st:${stVar(p.s.id)}"><b>${p.c}</b>${p.s.name}</li>`).join("");
+}
+function fillSelect(sel, first, entries){
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">${first}</option>` + entries.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join("");
+  sel.value = [...sel.options].some(o=>o.value===cur) ? cur : "";
+}
 function render(){
-  const list0 = S.data.begleitungen || [];
-  const sel = $("#f-person"), cur = sel.value;
-  sel.innerHTML = '<option value="">Alle</option>' + [...new Set(list0.map(b=>b.person).filter(Boolean))].sort().map(n=>`<option>${esc(n)}</option>`).join("");
-  sel.value = cur;
-  const p = sel.value, q = $("#f-q").value.trim().toLowerCase();
-  const list = list0.filter(b => (!p || b.person === p) &&
-    (!q || [b.schule,b.gruppe,b.thema,b.person,b.anliegen].join(" ").toLowerCase().includes(q)));
+  const list0 = all();
+  fillSelect($("#f-bereich"), "Alle Bereiche", [...new Set(list0.map(b=>b.bereich||""))].sort((a,b)=>(a||"z").localeCompare(b||"z"))
+    .map(k=>[k===""?"__offen":k, `${BEREICHE[k]} (${list0.filter(b=>(b.bereich||"")===k).length})`]));
+  fillSelect($("#f-schule"), "Alle Schulen", [...new Set(list0.map(b=>b.schule))].sort()
+    .map(k=>[k, SCHULEN[k] ? `${k} – ${SCHULEN[k]}` : k]));
+  state.bereich = $("#f-bereich").value === "__offen" ? "" : $("#f-bereich").value;
+  const offenOnly = $("#f-bereich").value === "__offen";
+  state.schule = $("#f-schule").value;
+  let list = filtered(); if (offenOnly) list = list.filter(b=>!b.bereich);
+
+  renderOverview(list);
+  $("#count").textContent = list.length === list0.length
+    ? `${list.length} Begleitungen` : `${list.length} von ${list0.length} Begleitungen (gefiltert)`;
   $("#cols").innerHTML = SPALTEN.map(s => {
-    const items = list.filter(b => b.status === s.id);
-    return `<section class="col" data-status="${s.id}" style="--st:${stVar(s.id)}" aria-label="${s.name}">
+    const items = list.filter(b => colOf(b).id === s.id)
+      .sort((a,b)=> ORDER.indexOf(b.phase)-ORDER.indexOf(a.phase) || a.stufe.localeCompare(b.stufe));
+    return `<section class="col" data-col="${s.id}" style="--st:${stVar(s.id)}" aria-label="${s.name}">
       <div class="colhead"><h3>${s.name}</h3><span class="n">${items.length}</span></div>
       <p class="colhint">${s.hint}</p>
-      ${items.length ? items.map(card).join("") : '<div class="empty">Keine Begleitung in dieser Phase.</div>'}
+      ${items.length ? items.map(card).join("") : '<div class="empty">Noch keine Begleitung in dieser Phase.</div>'}
     </section>`;
   }).join("");
+  $("#rows").innerHTML = [...list].sort((a,b)=> ORDER.indexOf(b.phase)-ORDER.indexOf(a.phase) || a.schule.localeCompare(b.schule))
+    .map(b => `<tr><td><span class="stufe ${esc(b.stufe)}">${esc(b.stufe)}</span></td><td>${esc(b.schule)}</td><td>${esc(b.gruppe)}</td>
+      <td class="thema">${esc(b.thema)}${b.notiz?`<div class="note">${esc(b.notiz)}</div>`:""}</td>
+      <td>${esc(BEREICHE[b.bereich||""])}</td><td>${b.ziel ? esc(ZIELGRUPPEN[b.ziel]) : "–"}</td>
+      <td><span class="ph" style="--st:${stVar(colOf(b).id)}">${esc(PHASEN[b.phase]||b.phase)}</span></td></tr>`).join("")
+    || `<tr><td colspan="7" class="empty">Keine Begleitung passt zum Filter.</td></tr>`;
+  $("#view-board").hidden = state.view !== "board";
+  $("#view-list").hidden = state.view !== "list";
+  $("#src").textContent = `Quelle: ${QUELLE}` + (S.data.stand ? ` · Stand ${fmtDate(S.data.stand)}` : "");
   $("#stand").textContent = S.data.stand ? "Stand " + fmtDate(S.data.stand) : "";
   $("#schulen").innerHTML = [...new Set(list0.map(b=>b.schule))].map(s=>`<option value="${esc(s)}">`).join("");
 }
 
-/* ---- Ziehen und Ablegen ---- */
+/* ---- Filter ---- */
+function seg(id, key){
+  $(id).addEventListener("click", e => {
+    const btn = e.target.closest("button"); if (!btn) return;
+    state[key] = btn.dataset.v;
+    $(id).querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === btn));
+    render();
+  });
+}
+seg("#f-stufe","stufe"); seg("#f-view","view");
+$("#f-bereich").addEventListener("change", render);
+$("#f-schule").addEventListener("change", render);
+$("#f-q").addEventListener("input", e => { state.q = e.target.value.trim(); render(); });
+
+/* ---- Ziehen und Ablegen: Karte landet im ersten Schritt der Zielspalte ---- */
 let dragId = null;
 $("#cols").addEventListener("dragstart", e => {
   const c = e.target.closest(".card"); if (!c || !S.token) return;
@@ -419,50 +560,46 @@ $("#cols").addEventListener("dragstart", e => {
 $("#cols").addEventListener("dragend", e => { e.target.closest(".card")?.classList.remove("dragging"); document.querySelectorAll(".col.over").forEach(c=>c.classList.remove("over")); });
 $("#cols").addEventListener("dragover", e => { const col = e.target.closest(".col"); if (!col || !dragId) return; e.preventDefault(); document.querySelectorAll(".col.over").forEach(c=>c!==col&&c.classList.remove("over")); col.classList.add("over"); });
 $("#cols").addEventListener("drop", async e => {
-  const col = e.target.closest(".col"); if (!col || !dragId) return; e.preventDefault(); col.classList.remove("over");
-  const id = dragId, to = col.dataset.status; dragId = null;
-  const b = S.data.begleitungen.find(x=>x.id===id); if (!b || b.status === to) return;
-  const name = SPALTEN.find(s=>s.id===to).name;
-  b.status = to; render(); // sofort anzeigen, dann speichern
-  await commit(list => { const x = list.find(y=>y.id===id); if (x) x.status = to; }, `Karte «${b.thema}» → ${name}`);
+  const colEl = e.target.closest(".col"); if (!colEl || !dragId) return; e.preventDefault(); colEl.classList.remove("over");
+  const id = dragId; dragId = null;
+  const target = SPALTEN.find(s=>s.id===colEl.dataset.col);
+  const b = all().find(x=>x.id===id); if (!b || colOf(b).id === target.id) return;
+  const to = target.schritte[0];
+  b.phase = to; render(); // sofort anzeigen, dann speichern
+  await commit(list => { const x = list.find(y=>y.id===id); if (x) x.phase = to; }, `Karte «${b.thema}» → ${PHASEN[to]}`);
 });
 
 /* ---- Karte bearbeiten / neue Anfrage ---- */
 const F = id => $("#c-" + id);
 function openCard(id){
-  const b = id ? S.data.begleitungen.find(x=>x.id===id) : null;
+  const b = id ? all().find(x=>x.id===id) : null;
   S.editId = b ? b.id : null;
   $("#c-title").textContent = b ? "Karte bearbeiten" : "Neue Anfrage";
-  F("schule").value = b?.schule || ""; F("gruppe").value = b?.gruppe || ""; F("thema").value = b?.thema || "";
-  F("anliegen").value = b?.anliegen || ""; F("eingang").value = b?.eingang || "vernetzt@dlh.zh.ch";
-  F("datum").value = b?.eingangsdatum || today(); F("person").value = b?.person || "";
-  F("status").value = b?.status || "anfrage"; F("treffen").value = String(b?.treffen || 0);
-  F("ergebnis").value = b?.ergebnis || ""; F("etl").checked = !!b?.etl; F("beispiel").checked = !!b?.beispiel;
-  F("status").disabled = !b;  // neue Anfragen landen immer in «Anfrage»
-  $("#c-more").hidden = !b;
+  F("stufe").value = b?.stufe || "MS"; F("schule").value = b?.schule || ""; F("gruppe").value = b?.gruppe || "";
+  F("thema").value = b?.thema || ""; F("bereich").value = b?.bereich || ""; F("ziel").value = b?.ziel || "";
+  F("phase").value = b?.phase || "0"; F("notiz").value = b?.notiz || ""; F("ergebnis").value = b?.ergebnis || "";
   const del = F("del"); del.hidden = !b; del.textContent = "Löschen"; del.dataset.armed = "";
   F("err").hidden = true;
   $("#dlg-card").showModal(); F(b ? "thema" : "schule").focus();
 }
 $("#new").addEventListener("click", () => openCard(null));
-$("#cols").addEventListener("click", e => { const c = e.target.closest(".card"); if (c && S.token) openCard(c.dataset.id); });
+$("#cols").addEventListener("click", e => { const c = e.target.closest(".card"); if (c && S.token && !e.target.closest("a")) openCard(c.dataset.id); });
 $("#cols").addEventListener("keydown", e => { const c = e.target.closest(".card"); if (c && S.token && (e.key==="Enter"||e.key===" ")) { e.preventDefault(); openCard(c.dataset.id); } });
 
 $("#f-card").addEventListener("submit", async e => {
   e.preventDefault();
   const v = {
-    schule:F("schule").value.trim(), gruppe:F("gruppe").value.trim(), thema:F("thema").value.trim(),
-    anliegen:F("anliegen").value.trim(), eingang:F("eingang").value, eingangsdatum:F("datum").value,
-    person:F("person").value, etl:F("etl").checked, beispiel:F("beispiel").checked,
+    stufe:F("stufe").value, schule:F("schule").value.trim(), gruppe:F("gruppe").value.trim(), thema:F("thema").value.trim(),
+    bereich:F("bereich").value, ziel:F("ziel").value, phase:F("phase").value,
+    notiz:F("notiz").value.trim(), ergebnis:F("ergebnis").value.trim(),
   };
   const btn = F("save"); btn.disabled = true; btn.textContent = "Speichere …";
   let ok;
   if (S.editId) {
-    Object.assign(v, { status:F("status").value, treffen:+F("treffen").value, ergebnis:F("ergebnis").value.trim() });
     const id = S.editId;
     ok = await commit(list => { const x = list.find(y=>y.id===id); if (x) Object.assign(x, v); }, `Karte «${v.thema}» bearbeitet`);
   } else {
-    const nb = { id:"b" + Date.now().toString(36), status:"anfrage", treffen:0, ergebnis:"", ...v };
+    const nb = { id: v.stufe.toLowerCase() + Date.now().toString(36), ...v };
     ok = await commit(list => list.push(nb), `Neue Anfrage: ${v.gruppe}, ${v.schule}`);
   }
   btn.disabled = false; btn.textContent = "Speichern";
@@ -493,12 +630,11 @@ $("#f-login").addEventListener("submit", async e => {
 document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
 
 /* ---- Statische Teile ---- */
-$("#c-person").innerHTML = '<option value="">offen</option>' + TEAM.map(([n])=>`<option>${esc(n)}</option>`).join("");
-$("#c-status").innerHTML = SPALTEN.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
-$("#flow").innerHTML = ABLAUF.map(([t,d,s]) => `<li style="--st:${stVar(s)}"><div><b>${t}<em>${SPALTEN.find(x=>x.id===s).name}</em></b><span>${d}</span></div></li>`).join("");
+F("bereich").innerHTML = Object.entries(BEREICHE).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("");
+F("ziel").innerHTML = Object.entries(ZIELGRUPPEN).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("");
+F("phase").innerHTML = SPALTEN.map(s => `<optgroup label="${esc(s.name)}">${s.schritte.map(p=>`<option value="${p}">${esc(PHASEN[p])}</option>`).join("")}</optgroup>`).join("");
+$("#flow").innerHTML = ABLAUF.map(([t,d,s]) => `<li style="--st:${stVar(s)}"><div><b>${t}</b><span>${d}</span></div></li>`).join("");
 $("#people").innerHTML = TEAM.map(([n,f])=>`<div class="person"><b>${esc(n)}</b><span>${esc(f)}</span></div>`).join("");
-$("#f-person").addEventListener("change", render);
-$("#f-q").addEventListener("input", render);
 $("#copy").addEventListener("click", async () => {
   const btn = $("#copy");
   try { await navigator.clipboard.writeText($("#mail").textContent); btn.textContent = "Kopiert"; }
