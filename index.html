@@ -154,6 +154,7 @@ body.editing .card{cursor:grab}
 body.editing .card:active{cursor:grabbing}
 .card.dragging{opacity:.4}
 .col.over{outline:2px dashed var(--st);outline-offset:-2px}
+.dropline{height:4px;background:var(--st);margin:-7px 0 -3px;flex:none}
 .result{font-size:13px;color:var(--accent-ink);font-weight:600;overflow-wrap:anywhere}
 .linkbtn{border:0;padding:0;background:none;color:var(--muted);text-decoration:underline;font:400 13px var(--body);cursor:pointer}
 .linkbtn:hover{color:var(--fg)}
@@ -510,6 +511,11 @@ function logout(){
 }
 
 /* ---- Darstellung ---- */
+/* Reihenfolge in einer Spalte: zuerst «ordnung» (von Hand gezogen), sonst nach Fortschritt und Stufe */
+const ordOf = b => (typeof b.ordnung === "number" ? b.ordnung : Infinity);
+function sortCol(items){
+  return [...items].sort((a,b)=> (ordOf(a)-ordOf(b)) || (ORDER.indexOf(b.phase)-ORDER.indexOf(a.phase)) || a.stufe.localeCompare(b.stufe) || 0);
+}
 function all(){ return S.data.begleitungen || []; }
 function filtered(){
   const q = state.q.toLowerCase();
@@ -570,8 +576,7 @@ function render(){
 
   renderOverview(list);
   $("#cols").innerHTML = SPALTEN.map(s => {
-    const items = list.filter(b => colOf(b).id === s.id)
-      .sort((a,b)=> ORDER.indexOf(b.phase)-ORDER.indexOf(a.phase) || a.stufe.localeCompare(b.stufe));
+    const items = sortCol(list.filter(b => colOf(b).id === s.id));
     return `<section class="col" data-col="${s.id}" style="--st:${stVar(s.id)}" aria-label="${s.name}">
       <div class="colhead"><h3>${s.name}</h3><span class="n">${items.length}</span></div>
       <p class="colhint">${s.hint}</p>
@@ -604,23 +609,53 @@ $("#f-bereich").addEventListener("change", render);
 $("#f-schule").addEventListener("change", render);
 $("#f-q").addEventListener("input", e => { state.q = e.target.value.trim(); render(); });
 
-/* ---- Ziehen und Ablegen: Karte landet im ersten Schritt der Zielspalte ---- */
-let dragId = null;
+/* ---- Ziehen und Ablegen ----
+   Zwischen Spalten: Karte wechselt in den ersten Schritt der Zielspalte.
+   Innerhalb einer Spalte: Karte an die gewünschte Stelle schieben (Feld «ordnung»). */
+let dragId = null, dropBefore = null;   // dropBefore = id der Karte, vor der eingefügt wird (null = ans Ende)
+const line = document.createElement("div"); line.className = "dropline";
+function clearDrop(){ line.remove(); document.querySelectorAll(".col.over").forEach(c=>c.classList.remove("over")); }
 $("#cols").addEventListener("dragstart", e => {
   const c = e.target.closest(".card"); if (!c || !S.token) return;
   dragId = c.dataset.id; c.classList.add("dragging"); e.dataTransfer.effectAllowed = "move";
   try { e.dataTransfer.setData("text/plain", dragId); } catch {}
 });
-$("#cols").addEventListener("dragend", e => { e.target.closest(".card")?.classList.remove("dragging"); document.querySelectorAll(".col.over").forEach(c=>c.classList.remove("over")); });
-$("#cols").addEventListener("dragover", e => { const col = e.target.closest(".col"); if (!col || !dragId) return; e.preventDefault(); document.querySelectorAll(".col.over").forEach(c=>c!==col&&c.classList.remove("over")); col.classList.add("over"); });
+$("#cols").addEventListener("dragend", e => { e.target.closest(".card")?.classList.remove("dragging"); clearDrop(); dragId = null; });
+$("#cols").addEventListener("dragover", e => {
+  const col = e.target.closest(".col"); if (!col || !dragId) return; e.preventDefault();
+  document.querySelectorAll(".col.over").forEach(c=>c!==col&&c.classList.remove("over")); col.classList.add("over");
+  const cards = [...col.querySelectorAll(".card")].filter(c => c.dataset.id !== dragId);
+  const next = cards.find(c => { const r = c.getBoundingClientRect(); return e.clientY < r.top + r.height/2; });
+  dropBefore = next ? next.dataset.id : null;
+  if (next) col.insertBefore(line, next);
+  else { const last = cards[cards.length-1]; if (last) last.after(line); else col.appendChild(line); }
+});
 $("#cols").addEventListener("drop", async e => {
-  const colEl = e.target.closest(".col"); if (!colEl || !dragId) return; e.preventDefault(); colEl.classList.remove("over");
-  const id = dragId; dragId = null;
+  const colEl = e.target.closest(".col"); if (!colEl || !dragId) return; e.preventDefault();
+  const id = dragId, before = dropBefore; dragId = null; dropBefore = null; clearDrop();
   const target = SPALTEN.find(s=>s.id===colEl.dataset.col);
-  const b = all().find(x=>x.id===id); if (!b || colOf(b).id === target.id) return;
-  const to = target.schritte[0];
-  b.phase = to; render(); // sofort anzeigen, dann speichern
-  await commit(list => { const x = list.find(y=>y.id===id); if (x) x.phase = to; }, `Karte «${b.thema}» → ${PHASEN[to]}`);
+  const b = all().find(x=>x.id===id); if (!b) return;
+  const sameCol = colOf(b).id === target.id;
+  /* neue Reihenfolge für die ganze Spalte berechnen (auch Karten, die gerade weggefiltert sind) */
+  const apply = list => {
+    const x = list.find(y=>y.id===id); if (!x) return;
+    if (!sameCol) x.phase = target.schritte[0];
+    const rest = sortCol(list.filter(y => y.id !== id && colOf(y).id === target.id));
+    let i = before ? rest.findIndex(y => y.id === before) : -1;
+    if (i < 0) {   // ans Ende: hinter die letzte sichtbare Karte der Spalte
+      const vis = [...colEl.querySelectorAll(".card")].map(c=>c.dataset.id).filter(v=>v!==id);
+      const lastVis = vis[vis.length-1];
+      i = lastVis ? rest.findIndex(y => y.id === lastVis) + 1 : rest.length;
+    }
+    rest.splice(i, 0, x);
+    rest.forEach((y,k) => { y.ordnung = (k+1)*10; });
+  };
+  const beforeOrder = JSON.stringify(sortCol(all().filter(y=>colOf(y).id===target.id)).map(y=>y.id));
+  apply(all());
+  const afterOrder = JSON.stringify(sortCol(all().filter(y=>colOf(y).id===target.id)).map(y=>y.id));
+  if (sameCol && beforeOrder === afterOrder) { render(); return; }
+  render(); // sofort anzeigen, dann speichern
+  await commit(apply, sameCol ? `Karte «${b.thema}» in «${target.name}» verschoben` : `Karte «${b.thema}» → ${PHASEN[target.schritte[0]]}`);
 });
 
 /* ---- Karte bearbeiten / neue Anfrage ---- */
@@ -676,7 +711,7 @@ $("#f-card").addEventListener("submit", async e => {
   if (id) {
     const old = all().find(y=>y.id===id) || {};
     const pubChanged = Object.keys(v).some(k => (old[k]||"") !== v[k]);
-    if (pubChanged) ok = await commit(list => { const x = list.find(y=>y.id===id); if (x) Object.assign(x, v); }, `Karte «${v.thema}» bearbeitet`);
+    if (pubChanged) ok = await commit(list => { const x = list.find(y=>y.id===id); if (!x) return; const colBefore = colOf(x).id; Object.assign(x, v); if (colOf(x).id !== colBefore) delete x.ordnung; }, `Karte «${v.thema}» bearbeitet`);
   } else {
     id = v.stufe.toLowerCase() + Date.now().toString(36);
     const nb = { id, ...v };

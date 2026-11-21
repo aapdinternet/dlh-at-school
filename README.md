@@ -52,10 +52,10 @@ Das Repository ist öffentlich, inklusive aller früheren Versionen. Deshalb geh
 ## Hinweise
 
 - Nach dem Speichern sehen angemeldete Personen die Änderung sofort. Für Besucherinnen und Besucher kann es bis zu etwa 10 Minuten dauern (Zwischenspeicher von GitHub Pages).
-- Karten ziehen funktioniert mit der Maus: Die Karte landet im ersten Schritt der Zielspalte. Den genauen Schritt (z. B. «Optimierungen») im Formular wählen. Auf Tablet und Handy die Karte antippen und den Schritt im Formular ändern.
+- Karten ziehen funktioniert mit der Maus: innerhalb einer Spalte, um die Reihenfolge zu ändern (eine Linie zeigt, wo die Karte landet), oder in eine andere Spalte. Dort landet sie im ersten Schritt der Spalte. Den genauen Schritt (z. B. «Optimierungen») im Formular wählen. Auf Tablet und Handy die Karte antippen und den Schritt im Formular ändern.
 
 ## Aufbau der Karten (data/begleitungen.json)
 
 - Spalten = Phasen aus der Planungsübersicht: Anfrage · Spezifizieren & bauen · Testen & verbessern · Im Unterricht · Abgeschlossen.
-- Felder: `stufe` (BB/MS), `schule` (Kürzel), `gruppe`, `thema`, `bereich` (1a, 1b, 2, 3 oder leer), `ziel` (LP, SuS, beide oder leer), `phase` (0, 1.1, 1.2, M1, 2.1, 2.2, M2, 3.1, 3.2, M3, 3.3, abschluss), `notiz` (öffentlich), `ergebnis` (Link, sobald geteilt).
+- Felder: `stufe` (BB/MS), `schule` (Kürzel), `gruppe`, `thema`, `bereich` (1a, 1b, 2, 3 oder leer), `ziel` (LP, SuS, beide oder leer), `phase` (0, 1.1, 1.2, M1, 2.1, 2.2, M2, 3.1, 3.2, M3, 3.3, abschluss), `notiz` (öffentlich), `ergebnis` (Link, sobald geteilt), `ordnung` (Reihenfolge in der Spalte, wird beim Ziehen gesetzt).
 - Schulkürzel ausschreiben: in `index.html` bei `SCHULEN`.
