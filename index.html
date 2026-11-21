@@ -4,157 +4,146 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DLH@School Schaufenster</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
 <style>
-/* Layout: Kopf → Kennzahlen + Phasenbalken → Filter → Board (5 Spalten = Phasen) oder Liste → Ablauf, Angebot, Team, Kontakt */
+/* DLH-Design (dlh.zh.ch): Helvetica Now, schwarze Titel (900), Violett→Orange-Verlauf, eckige Formen */
 :root{
-  --bg:#FAFAF9; --surface:#FFFFFF; --sunk:#F1EFEC; --line:#E2DED9;
-  --fg:#262422; --muted:#6B655F; --accent:#EC6608; --accent-ink:#B44C00; --accent-soft:#FDE8D9;
-  --violet:#7A4E9A; --violet-soft:#EFE7F5; --teal:#1F6F78; --teal-soft:#E0F0F1;
-  --s-anfrage:#8C857E; --s-p1:#C98A00; --s-p2:#EC6608; --s-p3:#7A4E9A; --s-abschluss:#2F7D5B;
-  --display:"Archivo", "Helvetica Neue", Arial, sans-serif;
-  --body:"Source Sans 3", "Segoe UI", Arial, sans-serif;
-  --r:10px;
+  --bg:#F6F0F5; --surface:#FFFFFF; --sunk:#EDE3EB; --line:#E2D6E0;
+  --fg:#151515; --muted:#666666; --accent:#EC6608; --accent-ink:#C45200; --accent-soft:#FDEEE3;
+  --violet:#8A5DA4; --violet-soft:#F1EBF5; --teal:#1D3437; --teal-soft:#E6EBEB;
+  --grad:linear-gradient(90deg,#8A5DA4 0%,#EC6608 100%);
+  --s-anfrage:#999999; --s-p1:#8A5DA4; --s-p2:#BB6256; --s-p3:#EC6608; --s-abschluss:#1D3437;
+  --display:"Helvetica Now","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --body:"Helvetica Now","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --r:0px;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#171615; --surface:#22201E; --sunk:#1C1B19; --line:#36322F;
-  --fg:#EFEBE7; --muted:#A79F98; --accent:#FF8A3D; --accent-ink:#FFB27D; --accent-soft:#3A2618;
-  --violet:#C29BE0; --violet-soft:#2E2436; --teal:#6CC3CC; --teal-soft:#16302F;
-  --s-anfrage:#A79F98; --s-p1:#E6B33A; --s-p2:#FF8A3D; --s-p3:#C29BE0; --s-abschluss:#5FBF92;
-  color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#171615; --surface:#22201E; --sunk:#1C1B19; --line:#36322F;
-  --fg:#EFEBE7; --muted:#A79F98; --accent:#FF8A3D; --accent-ink:#FFB27D; --accent-soft:#3A2618;
-  --violet:#C29BE0; --violet-soft:#2E2436; --teal:#6CC3CC; --teal-soft:#16302F;
-  --s-anfrage:#A79F98; --s-p1:#E6B33A; --s-p2:#FF8A3D; --s-p3:#C29BE0; --s-abschluss:#5FBF92;
-  color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
-.wrap{max-width:1320px;margin:0 auto}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
-a{color:var(--accent-ink)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.5}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--display);font-weight:900;text-wrap:balance;margin:0;letter-spacing:-.005em}
+a{color:var(--accent)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-header{padding-block:36px 24px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:32px;align-items:end;border-bottom:1px solid var(--line)}
-.brand{font:700 13px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--violet);margin-bottom:14px}
-h1{font-size:clamp(32px,5vw,54px);font-weight:800;line-height:1.02}
+/* Kopf wie dlh.zh.ch: Verlaufsleiste, Logo, Titel */
+.toolbar{background:var(--grad);color:#fff}
+.toolbar .wrap{display:flex;gap:22px;align-items:center;min-height:44px;font:900 14px var(--display)}
+.toolbar a{color:#fff;text-decoration:none}
+.toolbar a:hover{text-decoration:underline}
+header{padding-block:28px 0}
+.logos{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:30px}
+.logos a{display:block;line-height:0}
+.logos img.logo{height:52px;width:auto}
+.logos img.label{height:52px;width:auto}
+h1{font-size:clamp(36px,5.2vw,60px);line-height:1.02}
 h1 .at{color:var(--accent)}
-.sub{font:600 clamp(18px,2.2vw,23px)/1.25 var(--display);color:var(--muted);margin-top:8px}
-.lead{max-width:62ch;margin:0}
-.lead strong{font-weight:700}
-.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:0;list-style:none}
-.facts li{font-size:14px;padding:4px 10px;border-radius:999px;background:var(--sunk);border:1px solid var(--line)}
+.sub{font:400 clamp(19px,2.2vw,25px)/1.35 var(--body);color:var(--fg);margin:12px 0 0}
+.sub b{font-weight:900}
 
 /* Kennzahlen */
-.overview{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:24px;align-items:stretch}
-.overview h2{font-size:24px;margin-bottom:4px}
-.overview .src{font-size:13px;color:var(--muted);margin:0}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
-.stat b{display:block;font:800 30px/1.05 var(--display);font-variant-numeric:tabular-nums}
-.stat span{font-size:13px;color:var(--muted)}
-.phasebox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:12px;justify-content:center}
-.phasebox h3{font-size:15px}
-.bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--sunk);gap:2px}
-.bar span{background:var(--st);min-width:0}
-.legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none}
-.legend li{font-size:13px;line-height:1.25;border-top:3px solid var(--st);padding-top:6px;min-width:0}
-.legend b{display:block;font:800 20px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.overview{margin-top:20px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.stat{background:var(--sunk);border-top:3px solid var(--violet);padding:8px 12px;font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat:nth-child(2){border-top-color:var(--teal)}
+.stat:nth-child(3){border-top-color:var(--s-p2)}
+.stat:nth-child(4){border-top-color:var(--accent)}
+.stat b,.stat span{font:inherit;color:inherit}
 
 /* Filter */
-.boardhead{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin:32px 0 14px}
-.boardhead h2{font-size:24px}
+.boardhead{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin:28px 0 14px}
+.boardhead h2{font-size:32px}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-select,input[type=search]{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-width:0}
+select,input[type=search]{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid #C1C1C1;border-radius:0;padding:7px 10px;min-width:0}
 input[type=search]{width:190px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
-.seg button{border:0;border-radius:0;background:transparent;color:var(--fg);font:600 14px var(--body);padding:6px 11px;cursor:pointer}
-.seg button+button{border-left:1px solid var(--line)}
-.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
-.count{font-size:13px;color:var(--muted);margin:-6px 0 12px}
+.seg{display:inline-flex;border:1px solid #C1C1C1;background:var(--surface)}
+.seg button{border:0;border-radius:0;background:transparent;color:var(--fg);font:700 14px var(--body);padding:7px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid #C1C1C1}
+.seg button[aria-pressed="true"]{background:var(--teal);color:#fff}
+.count{font-size:14px;color:var(--muted);margin:-6px 0 12px}
 
 /* Board */
 .board{overflow-x:auto;padding-bottom:6px}
 .cols{display:grid;grid-template-columns:repeat(5,minmax(228px,1fr));gap:14px;min-width:min(100%,1200px)}
-.col{background:var(--sunk);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.colhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:2px 2px 6px;border-bottom:2px solid var(--st)}
-.colhead h3{font-size:16px;font-weight:700}
-.colhead .n{font:700 14px var(--display);color:var(--st);font-variant-numeric:tabular-nums}
-.colhint{font-size:12.5px;color:var(--muted);line-height:1.35;margin:0}
-.card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--st);border-radius:8px;padding:11px 12px;display:flex;flex-direction:column;gap:5px;min-width:0}
-.card .top{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
-.card h4{margin:0;font:700 15px/1.25 var(--display)}
-.card .grp{font-size:14px}
+.col{background:var(--sunk);padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.colhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:2px 2px 8px;border-bottom:4px solid var(--st)}
+.colhead h3{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.colhead .n{font:900 17px var(--display);color:var(--st);font-variant-numeric:tabular-nums}
+.colhint{font-size:13px;color:var(--muted);line-height:1.35;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--st);padding:11px 12px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.card .top{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.card h4{font-size:16px;line-height:1.25}
+.card .grp{font-size:14.5px}
 .meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
-.chip{font-size:12px;padding:1px 8px;border-radius:999px;background:var(--sunk);border:1px solid var(--line);color:var(--fg);white-space:nowrap}
-.stufe{font:700 11px/1 var(--display);letter-spacing:.06em;padding:3px 6px;border-radius:4px}
-.stufe.BB{background:var(--teal-soft);color:var(--teal)}
-.stufe.MS{background:var(--violet-soft);color:var(--violet)}
-.steps-mini{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--muted);margin-top:2px}
-.steps-mini i{width:16px;height:5px;border-radius:3px;background:var(--line);flex:none}
+.chip{font-size:12px;padding:1px 7px;background:var(--sunk);border:1px solid var(--line);color:var(--fg);white-space:nowrap}
+.stufe{font:900 11px/1 var(--display);letter-spacing:.06em;padding:4px 6px}
+.stufe.BB{background:var(--teal);color:#fff}
+.stufe.MS{background:var(--violet);color:#fff}
+.steps-mini{display:flex;gap:4px;align-items:center;font-size:12.5px;color:var(--muted);margin-top:2px}
+.steps-mini i{width:16px;height:5px;background:var(--line);flex:none}
 .steps-mini i.on{background:var(--st)}
 .steps-mini span{margin-left:4px;min-width:0}
-.note{font-size:13px;color:var(--muted);font-style:italic;line-height:1.35}
-.empty{font-size:13px;color:var(--muted);font-style:italic;padding:6px 2px}
+.note{font-size:13.5px;color:var(--muted);font-style:italic;line-height:1.35}
+.empty{font-size:13.5px;color:var(--muted);font-style:italic;padding:6px 2px}
 
 /* Liste */
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
-table{border-collapse:collapse;width:100%;min-width:860px;font-size:14.5px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:860px;font-size:15px}
 th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font:700 13px var(--display);color:var(--muted);background:var(--sunk);position:sticky;top:0}
+th{font:900 13px var(--display);color:#fff;background:var(--teal);position:sticky;top:0}
 tr:last-child td{border-bottom:0}
 td .ph{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-td .ph::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--st)}
-td.thema{font-weight:600}
+td .ph::before{content:"";width:10px;height:10px;background:var(--st)}
+td.thema{font-weight:700}
 [hidden]{display:none !important}
 
 /* Info-Bereich */
-section.info{margin-top:44px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:28px}
-.info h2{font-size:22px;margin-bottom:12px}
+section.info{margin-top:52px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:32px}
+.info h2{font-size:28px;margin-bottom:14px}
 .steps{grid-column:span 7;min-width:0}
 .offer{grid-column:span 5;min-width:0}
 ol.flow{list-style:none;margin:0;padding:0;display:grid;counter-reset:s}
-ol.flow li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+ol.flow li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;padding:11px 0;border-top:1px solid var(--line)}
 ol.flow li:last-child{border-bottom:1px solid var(--line)}
-ol.flow li::before{counter-increment:s;content:counter(s);font:800 22px/1 var(--display);color:var(--st)}
-ol.flow b{display:block;font-family:var(--display)}
-ol.flow span{color:var(--muted);font-size:15px}
-ol.flow em{font-style:normal;font-size:12px;color:var(--muted);font-weight:600;margin-left:6px}
+ol.flow li::before{counter-increment:s;content:counter(s);font:900 24px/1 var(--display);color:var(--st)}
+ol.flow b{display:block;font-family:var(--display);font-weight:900}
+ol.flow span{color:var(--muted);font-size:15.5px}
 .yesno{display:grid;gap:14px}
-.yesno div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
-.yesno h3{font-size:15px;margin-bottom:6px}
-.yesno ul{margin:0;padding-left:18px;font-size:15px}
+.yesno div{background:var(--sunk);padding:14px 16px}
+.yesno h3{font-size:17px;margin-bottom:6px}
+.yesno ul{margin:0;padding-left:18px;font-size:15.5px}
 .yesno li+li{margin-top:4px}
 .team{grid-column:span 7;min-width:0}
 .people{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.person{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface)}
-.person b{font-family:var(--display);font-size:15px;display:block}
-.person span{font-size:13.5px;color:var(--muted)}
+.person{border-left:4px solid var(--violet);padding:8px 12px;background:var(--sunk)}
+.person b{font-family:var(--display);font-weight:900;font-size:15.5px;display:block}
+.person span{font-size:14px;color:var(--muted)}
 .contact{grid-column:span 5;min-width:0}
-.mail{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:700 20px var(--display);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
-.mail code{font:inherit;user-select:all;color:var(--accent-ink)}
-#copy{font:600 14px var(--body);border:1px solid var(--accent);color:var(--accent-ink);background:transparent;border-radius:8px;padding:5px 12px;cursor:pointer}
-#copy:hover{background:var(--accent-soft)}
-.small{font-size:14px;color:var(--muted);margin-top:10px}
-footer{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:space-between}
+.mail{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font:900 21px var(--display);background:var(--sunk);padding:14px 16px}
+.mail code{font:inherit;user-select:all;color:var(--accent)}
+#copy{font:700 14px var(--body);border:0;color:#fff;background:var(--accent);border-radius:0;padding:7px 14px;cursor:pointer}
+#copy:hover{background:var(--accent-ink)}
+.small{font-size:15px;color:var(--muted);margin-top:10px}
+
+/* Fusszeile wie dlh.zh.ch: Verlauf, weisse Schrift */
+.site-footer{margin-top:56px;background:var(--grad);color:#fff}
+.site-footer .wrap{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:center;justify-content:space-between;padding-block:28px;font-size:14px}
+.site-footer img{height:52px;width:auto;display:block}
+.site-footer a{color:#fff}
+.site-footer .linkbtn{color:#fff}
 
 @media (max-width:900px){
-  header,.overview{grid-template-columns:1fr;gap:14px}
   .steps,.offer,.team,.contact{grid-column:1/-1}
 }
 @media (max-width:560px){
   input[type=search]{width:100%} .filters{width:100%}
-  .legend{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stats{grid-template-columns:1fr 1fr;gap:8px}
+  .logos img.logo{height:40px} .logos img.label{height:40px}
 }
-@media (prefers-reduced-motion:no-preference){ .card{transition:transform .15s ease, box-shadow .15s ease} .card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06)} }
+@media (prefers-reduced-motion:no-preference){ .card{transition:transform .15s ease, box-shadow .15s ease} .card:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.08)} }
 
 /* ---- Bearbeitungsmodus ---- */
-.btn-primary{font:600 14px var(--body);background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn-primary{font:700 14px var(--body);background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:0;padding:6px 12px;cursor:pointer}
 .btn-primary:hover{background:var(--accent-ink);border-color:var(--accent-ink)}
-.btn{font:600 14px var(--body);border:1px solid var(--line);color:var(--fg);background:var(--surface);border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn{font:600 14px var(--body);border:1px solid var(--line);color:var(--fg);background:var(--surface);border-radius:0;padding:6px 12px;cursor:pointer}
 .btn:hover{background:var(--sunk)}
 .editbar{display:none;margin-top:20px;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;background:var(--violet-soft);border-radius:var(--r);padding:8px 12px}
 body.editing .editbar{display:flex}
@@ -168,57 +157,58 @@ body.editing .card:active{cursor:grabbing}
 .result{font-size:13px;color:var(--accent-ink);font-weight:600;overflow-wrap:anywhere}
 .linkbtn{border:0;padding:0;background:none;color:var(--muted);text-decoration:underline;font:400 13px var(--body);cursor:pointer}
 .linkbtn:hover{color:var(--fg)}
-dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);padding:0;width:min(580px,calc(100vw - 32px));max-height:calc(100vh - 32px)}
+dialog{border:1px solid var(--line);border-radius:0;background:var(--surface);color:var(--fg);padding:0;width:min(580px,calc(100vw - 32px));max-height:calc(100vh - 32px)}
 dialog::backdrop{background:rgba(20,18,16,.45)}
 dialog form{padding:20px 22px;display:grid;gap:12px}
 dialog h2{font-size:21px}
 .field{display:grid;gap:4px;min-width:0}
 .field label{font-size:13.5px;font-weight:600}
-.field input,.field select,.field textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+.field input,.field select,.field textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:0;padding:8px 10px;width:100%}
 .field textarea{min-height:60px;resize:vertical}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .check{display:flex;gap:8px;align-items:center;font-size:14.5px}
 .hint{font-size:13px;color:var(--muted);margin:0}
-.warn{font-size:13px;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:0}
+.warn{font-size:13px;background:var(--accent-soft);border-radius:0;padding:8px 10px;margin:0}
 .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-top:4px}
 .actions .right{display:flex;gap:8px;margin-left:auto}
-.btn-danger{font:600 14px var(--body);background:transparent;border:1px solid #B3261E;color:#B3261E;border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn-danger{font:600 14px var(--body);background:transparent;border:1px solid #B3261E;color:#B3261E;border-radius:0;padding:6px 12px;cursor:pointer}
 .err{color:#B3261E;font-size:13.5px;margin:0}
+.intern{border:0;margin:6px 0 0;padding:14px 14px 12px;background:var(--violet-soft);border-left:4px solid var(--violet);display:grid;gap:10px;min-width:0}
+.intern legend{float:left;width:100%;padding:0;font:900 15px var(--display);color:var(--violet)}
+.intern legend span{font:400 13px var(--body);color:var(--muted);margin-left:6px}
+.intern .field input,.intern .field textarea{background:#fff}
+.aufwand{width:100%;min-width:0;border-collapse:collapse;font-size:13.5px;background:#fff}
+.aufwand th{position:static;background:transparent;color:var(--muted);font:700 12px var(--body);padding:4px 6px;border-bottom:1px solid var(--line)}
+.aufwand td{padding:4px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.aufwand td.h,.aufwand th.h{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.aufwand tfoot td{font-weight:700;border-bottom:0}
+.aufwand button{border:0;background:none;color:#B3261E;font:700 15px var(--body);cursor:pointer;padding:0 4px}
+.addrow{display:grid;grid-template-columns:130px 70px minmax(0,1fr) minmax(0,1.6fr) auto;gap:6px;align-items:end}
+.addrow input{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);background:#fff;min-width:0;width:100%}
+.ibadge{display:none;font:700 11.5px var(--body);color:var(--violet);background:var(--violet-soft);padding:2px 6px;align-self:flex-start}
+body.editing .ibadge{display:inline-block}
+@media (max-width:560px){.addrow{grid-template-columns:1fr 1fr}}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:14px;z-index:50}
 @media (max-width:560px){.row2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div class="toolbar"><div class="wrap"><a href="https://dlh.zh.ch">Digital Learning Hub Sek II</a><a href="#kontakt">Anfrage stellen</a></div></div>
 <div class="wrap">
 <header>
-  <div>
-    <div class="brand">Digital Learning Hub Sek II</div>
-    <h1>DLH<span class="at">@</span>School</h1>
-    <div class="sub">Fachschaftsberatung und -begleitung</div>
+  <div class="logos">
+    <a href="https://dlh.zh.ch" aria-label="Digital Learning Hub Sek II – Startseite"><img class="logo" src="https://dlh.zh.ch/images/elements/DLH-Logo-Wappen-und-Loewe.svg" alt="Digital Learning Hub Sek II"></a>
+    <img class="label" src="https://dlh.zh.ch/images/elements/dlh-label.svg" alt="">
   </div>
-  <div>
-    <p class="lead">Wir begleiten <strong>Fachschaften und Lehrpersonengruppen</strong> der Sek II des Kantons Zürich direkt an ihrer Schule beim Einsatz digitaler Hilfsmittel im Unterricht. Pädagogik steuert die Technik.</p>
-    <ul class="facts"><li>freiwillig</li><li>kostenlos</li><li>ca. 3 Monate</li><li>Hilfe zur Selbsthilfe</li><li>Ergebnisse für alle Schulen</li></ul>
-  </div>
+  <h1>DLH<span class="at">@</span>School</h1>
+  <p class="sub"><b>Fachschaftsberatung und -begleitung zur Erstellung von KI-Assistenten.</b><br>Freiwillig. Kostenlos. Befähigend. Ermutigend.</p>
 </header>
 
-<div class="editbar" role="status"><span>Bearbeitungsmodus · angemeldet als <span class="who" id="who"></span></span><span class="hint">Karten ziehen, um die Phase zu ändern. Karte anklicken zum Bearbeiten. Jede Änderung wird sofort gespeichert und ist öffentlich sichtbar.</span><button type="button" class="linkbtn" id="logout">Abmelden</button></div>
+<div class="editbar" role="status"><span>Bearbeitungsmodus · angemeldet als <span class="who" id="who"></span></span><span class="hint">Karten ziehen, um die Phase zu ändern. Karte anklicken zum Bearbeiten. Änderungen an den Karten sind sofort öffentlich; der Bereich «Intern» bleibt privat.</span><button type="button" class="linkbtn" id="logout">Abmelden</button></div>
 
-<section class="overview" aria-label="Übersicht">
-  <div>
-    <h2>KI-Assistenten für Fachschaften</h2>
-    <p class="src" id="src"></p>
-    <div class="stats" id="stats"></div>
-  </div>
-  <div class="phasebox">
-    <h3>Wo stehen die Begleitungen?</h3>
-    <div class="bar" id="bar" role="img"></div>
-    <ul class="legend" id="legend"></ul>
-  </div>
-</section>
+<section class="overview" aria-label="Kennzahlen"><div class="stats" id="stats"></div></section>
 
 <div class="boardhead">
-  <h2>Begleitungen im Überblick</h2>
   <div class="filters">
     <button type="button" class="btn-primary editonly" id="new">+ Neue Anfrage</button>
     <div class="seg" role="group" aria-label="Stufe" id="f-stufe">
@@ -238,7 +228,6 @@ dialog h2{font-size:21px}
     </div>
   </div>
 </div>
-<p class="count" id="count" aria-live="polite"></p>
 <div class="board" id="view-board"><div class="cols" id="cols"></div></div>
 <div class="tablewrap" id="view-list" hidden>
   <table>
@@ -271,15 +260,19 @@ dialog h2{font-size:21px}
     <h2>Das Team</h2>
     <div class="people" id="people"></div>
   </div>
-  <div class="contact">
+  <div class="contact" id="kontakt">
     <h2>Anfrage stellen</h2>
     <div class="mail"><code id="mail">vernetzt@dlh.zh.ch</code><button type="button" id="copy">Adresse kopieren</button></div>
     <p class="small">Schreiben Sie uns kurz, welche Gruppe Sie sind und was Sie im Unterricht erreichen möchten. Wir melden uns für ein Erstgespräch. Bitte informieren Sie Ihre Entwicklungsteamleitung.</p>
   </div>
 </section>
 
-<footer><span>DLH@School · Schaufenster nach innen und aussen</span><span><span id="stand"></span> · <button type="button" class="linkbtn" id="login">Team-Login</button></span></footer>
 </div>
+<footer class="site-footer"><div class="wrap">
+  <a href="https://dlh.zh.ch" aria-label="Digital Learning Hub Sek II"><img src="https://dlh.zh.ch/images/elements/logo/dlh-kanton-white.svg" alt="Digital Learning Hub Sek II – Kanton Zürich"></a>
+  <span>DLH@School · Schaufenster nach innen und aussen</span>
+  <span><span id="stand"></span> · <button type="button" class="linkbtn" id="login">Team-Login</button></span>
+</div></footer>
 
 <dialog id="dlg-login"><form method="dialog" id="f-login">
   <h2>Team-Login</h2>
@@ -292,7 +285,7 @@ dialog h2{font-size:21px}
 
 <dialog id="dlg-card"><form method="dialog" id="f-card">
   <h2 id="c-title">Neue Anfrage</h2>
-  <p class="warn">Alles, was hier steht, ist öffentlich sichtbar. Keine Namen von Lehrpersonen, keine Kontaktdaten und keine internen Bemerkungen erfassen; diese gehören in die Planungsübersicht (Excel).</p>
+  <p class="warn">Die Felder oben sind öffentlich sichtbar: keine Namen von Lehrpersonen, keine Kontaktdaten. Diese gehören in den Bereich «Intern» unten.</p>
   <div class="row2">
     <div class="field"><label for="c-stufe">Stufe *</label><select id="c-stufe"><option value="BB">Berufsbildung (BB)</option><option value="MS">Mittelschule (MS)</option></select></div>
     <div class="field"><label for="c-schule">Schule (Kürzel) *</label><input id="c-schule" required list="schulen" autocomplete="off" placeholder="z. B. KWI"></div>
@@ -306,6 +299,27 @@ dialog h2{font-size:21px}
   <div class="field"><label for="c-phase">Aktueller Schritt</label><select id="c-phase"></select></div>
   <div class="field"><label for="c-notiz">Kurznotiz (öffentlich, optional)</label><input id="c-notiz" maxlength="120" placeholder="z. B. Erstgespräch am 1. Dezember 2026"></div>
   <div class="field"><label for="c-ergebnis">Ergebnis / Link (sobald geteilt)</label><input id="c-ergebnis" placeholder="https://…"></div>
+  <fieldset class="intern" id="c-intern">
+    <legend>Intern <span>nur für angemeldete Teammitglieder, privates Repository</span></legend>
+    <p class="hint" id="c-intern-off" hidden></p>
+    <div id="c-intern-on" style="display:grid;gap:10px">
+      <div class="row2">
+        <div class="field"><label for="c-i-personen">Beteiligte Personen</label><textarea id="c-i-personen" placeholder="Name, Funktion – eine Person pro Zeile"></textarea></div>
+        <div class="field"><label for="c-i-mail">E-Mail-Adressen</label><textarea id="c-i-mail" placeholder="eine Adresse pro Zeile"></textarea></div>
+      </div>
+      <div class="field"><label for="c-i-notiz">Interne Notizen</label><textarea id="c-i-notiz" placeholder="Absprachen, offene Punkte, nächste Schritte"></textarea></div>
+      <div class="field"><span style="font-size:13.5px;font-weight:600">Aufwand</span>
+        <table class="aufwand"><thead><tr><th>Datum</th><th class="h">Std.</th><th>Wer</th><th>Was</th><th></th></tr></thead><tbody id="c-i-rows"></tbody><tfoot><tr><td>Total</td><td class="h" id="c-i-total">0</td><td colspan="3"></td></tr></tfoot></table>
+        <div class="addrow">
+          <input id="c-a-datum" type="date" aria-label="Datum">
+          <input id="c-a-std" type="text" inputmode="decimal" placeholder="Std." aria-label="Stunden">
+          <input id="c-a-wer" placeholder="Wer" aria-label="Wer">
+          <input id="c-a-was" placeholder="Was (z. B. Treffen, Prototyp)" aria-label="Was">
+          <button type="button" class="btn" id="c-a-add">Hinzufügen</button>
+        </div>
+      </div>
+    </div>
+  </fieldset>
   <p class="err" id="c-err" hidden></p>
   <div class="actions"><button type="button" class="btn-danger" id="c-del">Löschen</button><div class="right"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn-primary" type="submit" id="c-save">Speichern</button></div></div>
 </form></dialog>
@@ -317,7 +331,13 @@ const CONFIG = {
   owner: "aapdinternet",          // GitHub-Account oder Organisation
   repo: "dlh-at-school",          // Name des Repositorys
   branch: "main",
-  path: "data/begleitungen.json"  // Datei mit den Karten
+  path: "data/begleitungen.json", // Datei mit den Karten (öffentlich)
+  intern: {                        // privates Repository für interne Notizen
+    owner: "aapdinternet",
+    repo: "dlh-at-school-intern",
+    branch: "main",
+    path: "intern.json"
+  }
 };
 /* ===== Inhalte, die selten ändern =====
    Die Karten selbst liegen in data/begleitungen.json und werden über «Team-Login» bearbeitet.
@@ -350,19 +370,22 @@ const ABLAUF = [
   ["Abschluss & teilen","Wir werten die Zusammenarbeit aus. Gute Ergebnisse teilen wir mit allen Schulen.","abschluss"],
 ];
 const TEAM = [
-  ["Alexander Wilhelm","Bereichsleitung Weiterbildung"],
+  ["Michael Bozenicar","Service Koordinator"],
   ["Pascal Schmidt","KI-Assistenten, Fobizz"],
-  ["Christoph Glaus","Schulorganisation, PICTS, BB, ABU"],
+  ["Christoph Glaus","PICTS, ABU"],
   ["Justine Burkhalter","PICTS, Geschichte, Sprachen, Maturarbeit"],
   ["Ricarda Reimer","Fobizz, Beratung"],
-  ["Silvia Mensing","Fobizz"],
+  ["Silvia Mensing","Fobizz, Beratung"],
   ["Madelaine Wetli","Schwerpunkte folgen"],
+  ["Alexander Wilhelm","Bereichsleitung Weiterbildung"],
 ];
 
 /* ===== Ab hier Programmlogik ===== */
 const API = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`;
 const TOKEN_KEY = "dlhschool.token";
-const S = { data:{ stand:"", begleitungen:[] }, sha:null, token:null, user:null, editId:null };
+const S = { data:{ stand:"", begleitungen:[] }, sha:null, token:null, user:null, editId:null,
+  intern:null, isha:null, internOk:false, internMsg:"" };
+const API_INT = `https://api.github.com/repos/${CONFIG.intern.owner}/${CONFIG.intern.repo}`;
 const state = { stufe:"", bereich:"", schule:"", q:"", view:"board" };
 
 const $ = s => document.querySelector(s);
@@ -429,6 +452,42 @@ async function commit(mutate, message){
   }
 }
 
+/* ---- Interne Notizen (privates Repository) ---- */
+async function loadIntern(){
+  S.internOk = false;
+  try { const r = await gh(API_INT); if (!r.permissions || !r.permissions.push) { S.internMsg = "Ihr Token darf das private Repository nur lesen, nicht schreiben."; } }
+  catch (e) { S.internMsg = `Kein Zugriff auf das private Repository «${CONFIG.intern.owner}/${CONFIG.intern.repo}». Das Repository fehlt, oder Ihr Token schliesst es nicht ein.`; S.intern = null; return; }
+  try {
+    const j = await gh(`${API_INT}/contents/${CONFIG.intern.path}?ref=${CONFIG.intern.branch}&t=${Date.now()}`);
+    S.isha = j.sha; S.intern = JSON.parse(b64dec(j.content));
+  } catch (e) {
+    if (e.status !== 404) { S.internMsg = "Interne Notizen konnten nicht geladen werden."; S.intern = null; return; }
+    S.isha = null; S.intern = { notizen:{} };   // Datei existiert noch nicht: wird beim ersten Speichern angelegt
+  }
+  S.intern.notizen = S.intern.notizen || {};
+  S.internOk = true; S.internMsg = "";
+}
+async function commitIntern(mutate, message){
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await loadIntern();
+    if (!S.internOk) { toast("Interne Notizen nicht gespeichert: kein Zugriff."); return false; }
+    mutate(S.intern.notizen);
+    const body = { message: message + " (via Schaufenster)", content: b64enc(JSON.stringify(S.intern, null, 2) + "\n"), branch: CONFIG.intern.branch };
+    if (S.isha) body.sha = S.isha;
+    try {
+      const j = await gh(`${API_INT}/contents/${CONFIG.intern.path}`, { method:"PUT", body: JSON.stringify(body) });
+      S.isha = j.content.sha; render(); return true;
+    } catch (e) {
+      if ((e.status === 409 || e.status === 422) && attempt === 0) continue;
+      toast("Interne Notizen konnten nicht gespeichert werden."); return false;
+    }
+  }
+}
+const internOf = id => (S.internOk && S.intern.notizen[id]) || null;
+const hours = n => (n||[]).reduce((t,a)=>t + (+a.stunden||0), 0);
+const fmtH = h => (Math.round(h*100)/100).toLocaleString("de-CH");
+const isEmptyIntern = n => !n || (!n.personen && !n.mail && !n.notiz && !(n.aufwand||[]).length);
+
 /* ---- Anmeldung ---- */
 async function login(token, remember){
   S.token = token;
@@ -438,13 +497,14 @@ async function login(token, remember){
   S.user = user || "Team";
   store(TOKEN_KEY, token, remember);
   await loadFromGitHub();
+  await loadIntern();
   document.body.classList.add("editing");
   $("#who").textContent = S.user;
   $("#login").hidden = true;
   render();
 }
 function logout(){
-  S.token = null; S.user = null; store(TOKEN_KEY, null);
+  S.token = null; S.user = null; S.intern = null; S.internOk = false; store(TOKEN_KEY, null);
   document.body.classList.remove("editing"); $("#login").hidden = false; render();
   toast("Abgemeldet");
 }
@@ -476,6 +536,7 @@ function card(b){
   const schule = SCHULEN[b.schule] ? `<abbr title="${esc(SCHULEN[b.schule])}">${esc(b.schule)}</abbr>` : esc(b.schule);
   const z = ZIELGRUPPEN[b.ziel||""];
   return `<article class="card" data-id="${esc(b.id)}" style="--st:${stVar(col.id)}" ${editing() ? 'draggable="true" tabindex="0" role="button" aria-label="Karte bearbeiten: '+esc(b.thema)+'"' : ""}>
+    ${(() => { const n = internOf(b.id); if (isEmptyIntern(n)) return ""; const h = hours(n.aufwand); return `<span class="ibadge">Intern${h ? ` · ${fmtH(h)} Std.` : ""}</span>`; })()}
     <div class="top"><span>${schule}</span><span class="stufe ${esc(b.stufe)}" title="${b.stufe==="BB"?"Berufsbildung":"Mittelschule"}">${esc(b.stufe)}</span></div>
     <h4>${esc(b.thema)}</h4>
     <div class="grp">${esc(b.gruppe)}</div>
@@ -488,12 +549,8 @@ function card(b){
 function renderOverview(list){
   const n = list.length, bb = list.filter(b=>b.stufe==="BB").length;
   const schulen = new Set(list.map(b=>b.schule)).size;
-  $("#stats").innerHTML = [[n,"Begleitungen"],[schulen, schulen===1?"Schule":"Schulen"],[`${bb} / ${n-bb}`,"Berufsbildung / Mittelschule"]]
-    .map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("");
-  const per = SPALTEN.map(s => ({ s, c:list.filter(b=>colOf(b).id===s.id).length }));
-  $("#bar").innerHTML = per.filter(p=>p.c).map(p=>`<span style="--st:${stVar(p.s.id)};flex:${p.c}" title="${p.s.name}: ${p.c}"></span>`).join("");
-  $("#bar").setAttribute("aria-label", per.map(p=>`${p.s.name}: ${p.c}`).join(", "));
-  $("#legend").innerHTML = per.map(p=>`<li style="--st:${stVar(p.s.id)}"><b>${p.c}</b>${p.s.name}</li>`).join("");
+  $("#stats").innerHTML = [[n,"Begleitungen"],[bb,"an Berufsfachschulen"],[n-bb,"an Mittelschulen"],[schulen, schulen===1?"Schule":"verschiedene Schulen"]]
+    .map(([v,l])=>`<div class="stat"><b>${v}</b> <span>${l}</span></div>`).join("");
 }
 function fillSelect(sel, first, entries){
   const cur = sel.value;
@@ -512,8 +569,6 @@ function render(){
   let list = filtered(); if (offenOnly) list = list.filter(b=>!b.bereich);
 
   renderOverview(list);
-  $("#count").textContent = list.length === list0.length
-    ? `${list.length} Begleitungen` : `${list.length} von ${list0.length} Begleitungen (gefiltert)`;
   $("#cols").innerHTML = SPALTEN.map(s => {
     const items = list.filter(b => colOf(b).id === s.id)
       .sort((a,b)=> ORDER.indexOf(b.phase)-ORDER.indexOf(a.phase) || a.stufe.localeCompare(b.stufe));
@@ -531,7 +586,6 @@ function render(){
     || `<tr><td colspan="7" class="empty">Keine Begleitung passt zum Filter.</td></tr>`;
   $("#view-board").hidden = state.view !== "board";
   $("#view-list").hidden = state.view !== "list";
-  $("#src").textContent = `Quelle: ${QUELLE}` + (S.data.stand ? ` · Stand ${fmtDate(S.data.stand)}` : "");
   $("#stand").textContent = S.data.stand ? "Stand " + fmtDate(S.data.stand) : "";
   $("#schulen").innerHTML = [...new Set(list0.map(b=>b.schule))].map(s=>`<option value="${esc(s)}">`).join("");
 }
@@ -580,8 +634,29 @@ function openCard(id){
   F("phase").value = b?.phase || "0"; F("notiz").value = b?.notiz || ""; F("ergebnis").value = b?.ergebnis || "";
   const del = F("del"); del.hidden = !b; del.textContent = "Löschen"; del.dataset.armed = "";
   F("err").hidden = true;
+  const n = (b && internOf(b.id)) || {};
+  S.draft = { personen:n.personen||"", mail:n.mail||"", notiz:n.notiz||"", aufwand:(n.aufwand||[]).map(a=>({...a})) };
+  S.draftOrig = JSON.stringify(S.draft);
+  F("i-personen").value = S.draft.personen; F("i-mail").value = S.draft.mail; F("i-notiz").value = S.draft.notiz;
+  F("a-datum").value = today(); F("a-std").value = ""; F("a-wer").value = S.user && S.user !== "Team" ? S.user : ""; F("a-was").value = "";
+  F("intern-on").hidden = !S.internOk; F("intern-off").hidden = S.internOk; F("intern-off").textContent = S.internMsg;
+  renderAufwand();
   $("#dlg-card").showModal(); F(b ? "thema" : "schule").focus();
 }
+function renderAufwand(){
+  const rows = S.draft.aufwand;
+  F("i-rows").innerHTML = rows.length ? rows.map((a,i)=>`<tr><td>${esc(fmtDate(a.datum))}</td><td class="h">${fmtH(+a.stunden||0)}</td><td>${esc(a.wer)}</td><td>${esc(a.was)}</td><td><button type="button" data-i="${i}" aria-label="Eintrag entfernen">×</button></td></tr>`).join("")
+    : '<tr><td colspan="5" class="hint">Noch kein Aufwand erfasst.</td></tr>';
+  F("i-total").textContent = fmtH(hours(rows));
+}
+F("a-add").addEventListener("click", () => {
+  const std = parseFloat(String(F("a-std").value).replace(",", "."));
+  if (!(std > 0)) { F("a-std").focus(); return; }
+  S.draft.aufwand.push({ datum:F("a-datum").value || today(), stunden:std, wer:F("a-wer").value.trim(), was:F("a-was").value.trim() });
+  S.draft.aufwand.sort((x,y)=>x.datum.localeCompare(y.datum));
+  F("a-std").value = ""; F("a-was").value = ""; renderAufwand();
+});
+F("i-rows").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (!b) return; S.draft.aufwand.splice(+b.dataset.i,1); renderAufwand(); });
 $("#new").addEventListener("click", () => openCard(null));
 $("#cols").addEventListener("click", e => { const c = e.target.closest(".card"); if (c && S.token && !e.target.closest("a")) openCard(c.dataset.id); });
 $("#cols").addEventListener("keydown", e => { const c = e.target.closest(".card"); if (c && S.token && (e.key==="Enter"||e.key===" ")) { e.preventDefault(); openCard(c.dataset.id); } });
@@ -593,14 +668,23 @@ $("#f-card").addEventListener("submit", async e => {
     bereich:F("bereich").value, ziel:F("ziel").value, phase:F("phase").value,
     notiz:F("notiz").value.trim(), ergebnis:F("ergebnis").value.trim(),
   };
+  Object.assign(S.draft, { personen:F("i-personen").value.trim(), mail:F("i-mail").value.trim(), notiz:F("i-notiz").value.trim() });
+  const internChanged = S.internOk && JSON.stringify(S.draft) !== S.draftOrig;
+  const draft = { ...S.draft, aufwand:[...S.draft.aufwand] };
   const btn = F("save"); btn.disabled = true; btn.textContent = "Speichere …";
-  let ok;
-  if (S.editId) {
-    const id = S.editId;
-    ok = await commit(list => { const x = list.find(y=>y.id===id); if (x) Object.assign(x, v); }, `Karte «${v.thema}» bearbeitet`);
+  let ok = true, id = S.editId;
+  if (id) {
+    const old = all().find(y=>y.id===id) || {};
+    const pubChanged = Object.keys(v).some(k => (old[k]||"") !== v[k]);
+    if (pubChanged) ok = await commit(list => { const x = list.find(y=>y.id===id); if (x) Object.assign(x, v); }, `Karte «${v.thema}» bearbeitet`);
   } else {
-    const nb = { id: v.stufe.toLowerCase() + Date.now().toString(36), ...v };
+    id = v.stufe.toLowerCase() + Date.now().toString(36);
+    const nb = { id, ...v };
     ok = await commit(list => list.push(nb), `Neue Anfrage: ${v.gruppe}, ${v.schule}`);
+  }
+  if (ok && internChanged) {
+    ok = await commitIntern(n => { if (isEmptyIntern(draft)) delete n[id]; else n[id] = draft; }, `Interne Notiz «${v.thema}»`);
+    if (ok) toast("Gespeichert (inkl. interne Notizen)");
   }
   btn.disabled = false; btn.textContent = "Speichern";
   if (ok) $("#dlg-card").close();
@@ -609,7 +693,10 @@ F("del").addEventListener("click", async () => {
   const del = F("del");
   if (!del.dataset.armed) { del.dataset.armed = "1"; del.textContent = "Wirklich löschen?"; return; }
   const id = S.editId, t = F("thema").value;
-  if (await commit(list => { const i = list.findIndex(y=>y.id===id); if (i>=0) list.splice(i,1); }, `Karte «${t}» gelöscht`)) $("#dlg-card").close();
+  if (await commit(list => { const i = list.findIndex(y=>y.id===id); if (i>=0) list.splice(i,1); }, `Karte «${t}» gelöscht`)) {
+    if (internOf(id)) await commitIntern(n => { delete n[id]; }, `Interne Notiz «${t}» gelöscht`);
+    $("#dlg-card").close();
+  }
 });
 
 /* ---- Login-Dialog ---- */

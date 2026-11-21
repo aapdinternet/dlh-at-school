@@ -30,9 +30,24 @@ Alle sehen die Karten. Nur DLH-Mitarbeitende mit Schreibrecht auf dieses Reposit
 
 Das Token nie weitergeben und nicht in Dateien speichern. Bei Verlust auf GitHub löschen und neu erstellen.
 
+## Interne Notizen (privates Repository)
+
+Jede Karte hat im Bearbeitungsformular einen Bereich «Intern»: beteiligte Personen, E-Mail-Adressen, interne Notizen und Aufwand (Datum, Stunden, wer, was, mit Total). Diese Angaben liegen nicht in diesem öffentlichen Repository, sondern in einem zweiten, privaten Repository und sind nur nach «Team-Login» sichtbar.
+
+Einrichten (einmalig, Repository-Inhaber):
+
+1. Neues Repository `dlh-at-school-intern` anlegen, Sichtbarkeit **Private**, Häkchen «Add a README file» setzen (damit der Branch `main` existiert).
+2. Die Datei `intern.json` muss nicht angelegt werden; die Seite erstellt sie beim ersten Speichern.
+3. Alle Begleitpersonen auch in diesem Repository als Collaborator mit Rolle «Write» einladen.
+4. Das persönliche Token muss beide Repositories einschliessen (Repository access → beide auswählen, «Contents: Read and write»).
+
+Fehlt der Zugriff, zeigt das Formular einen Hinweis; die öffentlichen Felder lassen sich trotzdem bearbeiten.
+
+Datenschutz: Auch ein privates Repository liegt auf Servern von GitHub (USA). Ob Namen und E-Mail-Adressen von Lehrpersonen dort gespeichert werden dürfen, ist mit der Datenschutzstelle (IDG ZH) abzuklären.
+
 ## Wichtig zum Datenschutz
 
-Das Repository ist öffentlich, inklusive aller früheren Versionen. Deshalb gehören keine Namen von Lehrpersonen, keine E-Mail-Adressen und keine internen Notizen auf die Karten. Diese Angaben bleiben in der Jahresübersicht und in OneNote.
+Das Repository ist öffentlich, inklusive aller früheren Versionen. Deshalb gehören keine Namen von Lehrpersonen, keine E-Mail-Adressen und keine internen Notizen auf die Karten. Diese Angaben gehören in den Bereich «Intern» (privates Repository) oder in die Planungsübersicht.
 
 ## Hinweise
 
