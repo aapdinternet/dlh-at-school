@@ -7,7 +7,7 @@
 <style>
 /* DLH-Design (dlh.zh.ch): Helvetica Now, schwarze Titel (900), Violett→Orange-Verlauf, eckige Formen */
 :root{
-  --bg:#F6F0F5; --surface:#FFFFFF; --sunk:#EDE3EB; --line:#E2D6E0;
+  --bg:#FFFFFF; --surface:#FFFFFF; --sunk:#EDE3EB; --line:#E2D6E0;
   --fg:#151515; --muted:#666666; --accent:#EC6608; --accent-ink:#C45200; --accent-soft:#FDEEE3;
   --violet:#8A5DA4; --violet-soft:#F1EBF5; --teal:#1D3437; --teal-soft:#E6EBEB;
   --grad:linear-gradient(90deg,#8A5DA4 0%,#EC6608 100%);
@@ -145,9 +145,6 @@ ol.flow span{color:var(--muted);font-size:15.5px}
 .btn-primary:hover{background:var(--accent-ink);border-color:var(--accent-ink)}
 .btn{font:600 14px var(--body);border:1px solid var(--line);color:var(--fg);background:var(--surface);border-radius:0;padding:6px 12px;cursor:pointer}
 .btn:hover{background:var(--sunk)}
-.editbar{display:none;margin-top:20px;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;background:var(--violet-soft);border-radius:var(--r);padding:8px 12px}
-body.editing .editbar{display:flex}
-.editbar .who{font-weight:700;color:var(--violet)}
 .editonly{display:none!important}
 body.editing .editonly{display:inline-flex!important}
 body.editing .card{cursor:grab}
@@ -205,7 +202,6 @@ body.editing .ibadge{display:inline-block}
   <p class="sub"><b>Fachschaftsberatung und -begleitung zur Erstellung von KI-Assistenten.</b><br>Freiwillig. Kostenlos. Befähigend. Ermutigend.</p>
 </header>
 
-<div class="editbar" role="status"><span>Bearbeitungsmodus · angemeldet als <span class="who" id="who"></span></span><span class="hint">Karten ziehen, um die Phase zu ändern. Karte anklicken zum Bearbeiten. Änderungen an den Karten sind sofort öffentlich; der Bereich «Intern» bleibt privat.</span><button type="button" class="linkbtn" id="logout">Abmelden</button></div>
 
 <section class="overview" aria-label="Kennzahlen"><div class="stats" id="stats"></div></section>
 
@@ -272,7 +268,7 @@ body.editing .ibadge{display:inline-block}
 <footer class="site-footer"><div class="wrap">
   <a href="https://dlh.zh.ch" aria-label="Digital Learning Hub Sek II"><img src="https://dlh.zh.ch/images/elements/logo/dlh-kanton-white.svg" alt="Digital Learning Hub Sek II – Kanton Zürich"></a>
   <span>DLH@School · Schaufenster nach innen und aussen</span>
-  <span><span id="stand"></span> · <button type="button" class="linkbtn" id="login">Team-Login</button></span>
+  <span><span id="stand"></span> · <button type="button" class="linkbtn" id="login">Team-Login</button><button type="button" class="linkbtn" id="logout" hidden>Abmelden</button></span>
 </div></footer>
 
 <dialog id="dlg-login"><form method="dialog" id="f-login">
@@ -500,13 +496,12 @@ async function login(token, remember){
   await loadFromGitHub();
   await loadIntern();
   document.body.classList.add("editing");
-  $("#who").textContent = S.user;
-  $("#login").hidden = true;
+  $("#login").hidden = true; $("#logout").hidden = false; $("#logout").title = "Angemeldet als " + S.user;
   render();
 }
 function logout(){
   S.token = null; S.user = null; S.intern = null; S.internOk = false; store(TOKEN_KEY, null);
-  document.body.classList.remove("editing"); $("#login").hidden = false; render();
+  document.body.classList.remove("editing"); $("#login").hidden = false; $("#logout").hidden = true; render();
   toast("Abgemeldet");
 }
 
