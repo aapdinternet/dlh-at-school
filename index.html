@@ -102,7 +102,8 @@ section.info{margin-top:52px;display:grid;grid-template-columns:repeat(12,minmax
 .offer{grid-column:span 5;min-width:0}
 ol.flow{list-style:none;margin:0;padding:0;display:grid;counter-reset:s}
 ol.flow li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;padding:11px 0;border-top:1px solid var(--line)}
-ol.flow li:last-child{border-bottom:1px solid var(--line)}
+ol.flow{background:var(--sunk);padding:4px 16px}
+ol.flow li:first-child{border-top:0}
 ol.flow li::before{counter-increment:s;content:counter(s);font:900 24px/1 var(--display);color:var(--st)}
 ol.flow b{display:block;font-family:var(--display);font-weight:900}
 ol.flow span{color:var(--muted);font-size:15.5px}
@@ -122,6 +123,7 @@ ol.flow span{color:var(--muted);font-size:15.5px}
 #copy{font:700 14px var(--body);border:0;color:#fff;background:var(--accent);border-radius:0;padding:7px 14px;cursor:pointer}
 #copy:hover{background:var(--accent-ink)}
 .small{font-size:15px;color:var(--muted);margin-top:10px}
+.contact .small{background:var(--sunk);padding:12px 16px;margin:10px 0 0}
 
 /* Fusszeile wie dlh.zh.ch: Verlauf, weisse Schrift */
 .site-footer{margin-top:56px;background:var(--grad);color:#fff}
@@ -361,8 +363,8 @@ const PHASEN = {
 };
 const ABLAUF = [
   ["Anfrage & Erstgespräch","Eine Fachschaft meldet ihren Bedarf. Im Erstgespräch klären wir Thema, Ziele und Umfang; die Bereichsleitung Weiterbildung priorisiert.","anfrage"],
-  ["Spezifizieren & bauen","Gemeinsam halten wir fest, was der KI-Assistent können soll. Das DLH baut einen ersten Prototyp auf Fobizz.","p1"],
-  ["Testen & verbessern","Die Gruppe probiert den Prototyp aus, wir besprechen ihn und verbessern ihn.","p2"],
+  ["Spezifizieren & bauen","Gemeinsam halten wir fest, was der KI-Assistent können soll. Der DLH baut einen ersten Prototyp Version 1 auf Fobizz.","p1"],
+  ["Testen & verbessern","Die Gruppe probiert den Prototyp aus, wir besprechen ihn und verbessern ihn zu Version 2.","p2"],
   ["Im Unterricht","Version 2 kommt im Unterricht zum Einsatz. Aus den Rückmeldungen entsteht Version 3.","p3"],
   ["Abschluss & teilen","Wir werten die Zusammenarbeit aus. Gute Ergebnisse teilen wir mit allen Schulen.","abschluss"],
 ];
