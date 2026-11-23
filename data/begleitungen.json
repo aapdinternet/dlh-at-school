@@ -1,5 +1,5 @@
 {
-  "stand": "2026-11-21",
+  "stand": "2026-11-23",
   "begleitungen": [
     {
       "id": "bb01",
@@ -11,7 +11,20 @@
       "thema": "Mathematik-Tutor Kochen",
       "phase": "2.2",
       "notiz": "Im Test-Einsatz an der Schule",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Alex",
+          "name": "Wilhelm",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "Februar 2026",
+        "start": "02.04.2026",
+        "m1": "16.06.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "bb02",
@@ -23,7 +36,18 @@
       "thema": "Unternehmerisches Denken / Projektarbeit",
       "phase": "0",
       "notiz": "Start im 1. Quartal 2027",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Cyprian",
+          "name": "Jimenez",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "Juni 2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "bb03",
@@ -35,7 +59,20 @@
       "thema": "Sprachförderung",
       "phase": "2.2",
       "notiz": "Im Einsatz an der Schule",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Olivia",
+          "name": "von Matt",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "August 2026",
+        "start": "21.08.2026",
+        "m1": "16.09.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "bb04",
@@ -47,7 +84,26 @@
       "thema": "Interviews vorbereiten und auswerten",
       "phase": "1.2",
       "notiz": "Soll als Modell für weitere Schulen dienen",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Erika",
+          "name": "Langhans",
+          "mail": ""
+        },
+        {
+          "vorname": "Reto",
+          "name": "Baumann",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "August 2026",
+        "start": "28.08.2026",
+        "m1": "22.11.2026",
+        "abschluss_geplant": "Ende Januar 2027"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "bb05",
@@ -59,7 +115,20 @@
       "thema": "12 Schlüsselkompetenzen",
       "phase": "2.1",
       "notiz": "Erster von 12 Assistenten erstellt («Ziele setzen»)",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Nadine",
+          "name": "Vetterli",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "Juli 2026",
+        "start": "25.08.2026",
+        "m1": "09.11.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "bb06",
@@ -71,7 +140,16 @@
       "thema": "Thema noch offen",
       "phase": "0",
       "notiz": "Erstgespräch am 1. Dezember 2026",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Sabine",
+          "name": "Neunschwander",
+          "mail": ""
+        }
+      ],
+      "termine": {},
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms07",
@@ -83,7 +161,20 @@
       "thema": "Essay-Vorkorrektur",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Wanda",
+          "name": "Phillips",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "Juni 2026",
+        "start": "03.07.2026",
+        "m1": "18.09.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms08",
@@ -95,7 +186,19 @@
       "thema": "Essays üben",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Wanda",
+          "name": "Phillips",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "August 2026",
+        "m1": "29.09.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms09",
@@ -107,7 +210,23 @@
       "thema": "Stilistik-Vorkorrektur",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Ylenia",
+          "name": "de Luca",
+          "mail": ""
+        },
+        {
+          "vorname": "Xenia",
+          "name": "Goslicka",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "m1": "25.08.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms10",
@@ -119,7 +238,18 @@
       "thema": "Thema noch offen",
       "phase": "0",
       "notiz": "Nach einer Weiterbildung des DLH",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Flavia",
+          "name": "Kasper",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "24.09.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms11",
@@ -131,7 +261,18 @@
       "thema": "Neues Skript",
       "phase": "1.2",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Nadja",
+          "name": "Greter",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "start": "12.08.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms12",
@@ -143,7 +284,18 @@
       "thema": "Neues Lehrmittel (Innovationsprojekt)",
       "phase": "0",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Martin",
+          "name": "Holzer",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "16.11.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms13",
@@ -154,8 +306,19 @@
       "ziel": "",
       "thema": "Denken und Entscheiden",
       "phase": "1.1",
-      "notiz": "",
-      "ergebnis": ""
+      "notiz": "Start so bald wie möglich",
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Nico",
+          "name": "Zachmann",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "start": "22.06.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms14",
@@ -167,7 +330,16 @@
       "thema": "Neue Aufgaben",
       "phase": "0",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Silvan",
+          "name": "Pfändler",
+          "mail": ""
+        }
+      ],
+      "termine": {},
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms15",
@@ -177,9 +349,18 @@
       "bereich": "2",
       "ziel": "SuS",
       "thema": "Übungs-Assistent indirekte Rede",
-      "phase": "1.1",
+      "phase": "1.2",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Dominik",
+          "name": "Hug",
+          "mail": ""
+        }
+      ],
+      "termine": {},
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms16",
@@ -191,7 +372,18 @@
       "thema": "Thema noch offen",
       "phase": "0",
       "notiz": "Nach einer Weiterbildung des DLH",
-      "ergebnis": ""
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Nadja",
+          "name": "",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "25.09.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     },
     {
       "id": "ms17",
@@ -202,8 +394,24 @@
       "ziel": "",
       "thema": "Thema noch offen",
       "phase": "0",
-      "notiz": "KI-Tag der KME am 12. Februar 2027",
-      "ergebnis": ""
+      "notiz": "KI-Tag Ende Januar 2027",
+      "ergebnis": "",
+      "lehrpersonen": [
+        {
+          "vorname": "Roman",
+          "name": "Darms",
+          "mail": ""
+        },
+        {
+          "vorname": "Richard",
+          "name": "Frei",
+          "mail": ""
+        }
+      ],
+      "termine": {
+        "erstkontakt": "06.11.2026"
+      },
+      "begleitperson": "Pascal Schmidt"
     }
   ]
 }
