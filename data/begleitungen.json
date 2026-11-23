@@ -12,7 +12,7 @@
       "phase": "2.1",
       "notiz": "Im Test-Einsatz an der Schule",
       "ergebnis": "",
-      "ordnung": 30
+      "ordnung": 40
     },
     {
       "id": "bb02",
@@ -47,10 +47,10 @@
       "bereich": "1b",
       "ziel": "beide",
       "thema": "Interviews vorbereiten und auswerten",
-      "phase": "1.2",
+      "phase": "2.1",
       "notiz": "Soll als Modell für weitere Schulen dienen",
       "ergebnis": "",
-      "ordnung": 10
+      "ordnung": 20
     },
     {
       "id": "bb05",
@@ -63,7 +63,7 @@
       "phase": "2.1",
       "notiz": "Erster von 12 Assistenten erstellt («Ziele setzen»)",
       "ergebnis": "",
-      "ordnung": 20
+      "ordnung": 30
     },
     {
       "id": "bb06",
@@ -88,7 +88,7 @@
       "phase": "2.1",
       "notiz": "",
       "ergebnis": "",
-      "ordnung": 40
+      "ordnung": 50
     },
     {
       "id": "ms08",
@@ -101,7 +101,7 @@
       "phase": "2.1",
       "notiz": "",
       "ergebnis": "",
-      "ordnung": 50
+      "ordnung": 60
     },
     {
       "id": "ms09",
@@ -114,7 +114,7 @@
       "phase": "2.1",
       "notiz": "",
       "ergebnis": "",
-      "ordnung": 60
+      "ordnung": 70
     },
     {
       "id": "ms10",
