@@ -1,5 +1,5 @@
 {
-  "stand": "2026-11-21",
+  "stand": "2026-11-23",
   "begleitungen": [
     {
       "id": "bb01",
@@ -11,7 +11,8 @@
       "thema": "Mathematik-Tutor Kochen",
       "phase": "2.1",
       "notiz": "Im Test-Einsatz an der Schule",
-      "ergebnis": ""
+      "ergebnis": "",
+      "ordnung": 10
     },
     {
       "id": "bb02",
@@ -35,7 +36,8 @@
       "thema": "Sprachförderung",
       "phase": "2.2",
       "notiz": "Im Einsatz an der Schule",
-      "ergebnis": ""
+      "ergebnis": "",
+      "ordnung": 20
     },
     {
       "id": "bb04",
@@ -60,7 +62,8 @@
       "thema": "12 Schlüsselkompetenzen",
       "phase": "2.1",
       "notiz": "Erster von 12 Assistenten erstellt («Ziele setzen»)",
-      "ergebnis": ""
+      "ergebnis": "",
+      "ordnung": 30
     },
     {
       "id": "bb06",
@@ -84,7 +87,8 @@
       "thema": "Essay-Vorkorrektur",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "ordnung": 40
     },
     {
       "id": "ms08",
@@ -96,7 +100,8 @@
       "thema": "Essays üben",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "ordnung": 50
     },
     {
       "id": "ms09",
@@ -108,7 +113,8 @@
       "thema": "Stilistik-Vorkorrektur",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": ""
+      "ergebnis": "",
+      "ordnung": 60
     },
     {
       "id": "ms10",
