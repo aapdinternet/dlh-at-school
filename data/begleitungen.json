@@ -1,5 +1,5 @@
 {
-  "stand": "2026-11-23",
+  "stand": "2026-11-21",
   "begleitungen": [
     {
       "id": "bb01",
@@ -9,10 +9,9 @@
       "bereich": "3",
       "ziel": "beide",
       "thema": "Mathematik-Tutor Kochen",
-      "phase": "2.1",
+      "phase": "2.2",
       "notiz": "Im Test-Einsatz an der Schule",
-      "ergebnis": "",
-      "ordnung": 40
+      "ergebnis": ""
     },
     {
       "id": "bb02",
@@ -34,10 +33,9 @@
       "bereich": "2",
       "ziel": "LP",
       "thema": "Sprachförderung",
-      "phase": "abschluss",
+      "phase": "2.2",
       "notiz": "Im Einsatz an der Schule",
-      "ergebnis": "",
-      "ordnung": 10
+      "ergebnis": ""
     },
     {
       "id": "bb04",
@@ -47,10 +45,9 @@
       "bereich": "1b",
       "ziel": "beide",
       "thema": "Interviews vorbereiten und auswerten",
-      "phase": "1.1",
+      "phase": "1.2",
       "notiz": "Soll als Modell für weitere Schulen dienen",
-      "ergebnis": "",
-      "ordnung": 40
+      "ergebnis": ""
     },
     {
       "id": "bb05",
@@ -60,10 +57,9 @@
       "bereich": "1b",
       "ziel": "beide",
       "thema": "12 Schlüsselkompetenzen",
-      "phase": "3.1",
+      "phase": "2.1",
       "notiz": "Erster von 12 Assistenten erstellt («Ziele setzen»)",
-      "ergebnis": "",
-      "ordnung": 10
+      "ergebnis": ""
     },
     {
       "id": "bb06",
@@ -87,8 +83,7 @@
       "thema": "Essay-Vorkorrektur",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": "",
-      "ordnung": 50
+      "ergebnis": ""
     },
     {
       "id": "ms08",
@@ -100,8 +95,7 @@
       "thema": "Essays üben",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": "",
-      "ordnung": 60
+      "ergebnis": ""
     },
     {
       "id": "ms09",
@@ -113,8 +107,7 @@
       "thema": "Stilistik-Vorkorrektur",
       "phase": "2.1",
       "notiz": "",
-      "ergebnis": "",
-      "ordnung": 70
+      "ergebnis": ""
     },
     {
       "id": "ms10",
@@ -138,8 +131,7 @@
       "thema": "Neues Skript",
       "phase": "1.2",
       "notiz": "",
-      "ergebnis": "",
-      "ordnung": 20
+      "ergebnis": ""
     },
     {
       "id": "ms12",
@@ -163,8 +155,7 @@
       "thema": "Denken und Entscheiden",
       "phase": "1.1",
       "notiz": "",
-      "ergebnis": "",
-      "ordnung": 10
+      "ergebnis": ""
     },
     {
       "id": "ms14",
@@ -188,8 +179,7 @@
       "thema": "Übungs-Assistent indirekte Rede",
       "phase": "1.1",
       "notiz": "",
-      "ergebnis": "",
-      "ordnung": 30
+      "ergebnis": ""
     },
     {
       "id": "ms16",
