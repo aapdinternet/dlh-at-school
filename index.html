@@ -216,6 +216,16 @@ dialog.info-dlg{width:min(720px,calc(100vw - 24px))}
 .lp-list b{font-weight:900}
 .lp-list a{color:var(--accent);overflow-wrap:anywhere}
 .info-foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding:12px 22px 18px}
+.termine{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:0}
+.termine div{background:var(--sunk);padding:7px 10px}
+.termine dt{font-size:12.5px;color:var(--muted)}
+.termine dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+.row5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.row5 input{font:inherit;font-size:14px;padding:7px 8px;border:1px solid var(--line);background:var(--bg);min-width:0;width:100%}
+.row5 label{font-size:12.5px;color:var(--muted);display:grid;gap:3px}
+@media (max-width:560px){.row5{grid-template-columns:1fr 1fr}}
+.ibadge.spaet{background:#FDEEE3;color:#B44C00}
+.ibadge.kritisch,.ibadge.absage{background:#FBE3E1;color:#B3261E}
 /* Lehrpersonen im Formular */
 .lp-rows{display:grid;gap:6px}
 .lp-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.4fr) auto;gap:6px;align-items:center}
@@ -321,12 +331,26 @@ dialog.info-dlg{width:min(720px,calc(100vw - 24px))}
   </div>
   <div class="field"><label for="c-phase">Aktueller Schritt</label><select id="c-phase"></select></div>
   <div class="field"><label for="c-notiz">Kurznotiz (öffentlich, optional)</label><input id="c-notiz" maxlength="120" placeholder="z. B. Erstgespräch am 1. Dezember 2026"></div>
+  <div class="field"><label for="c-begleitperson">DLH-Begleitperson (öffentlich)</label><select id="c-begleitperson"></select></div>
+  <div class="field"><span style="font-size:13.5px;font-weight:600">Zeitplan (öffentlich, z. B. «16.06.2026» oder «Ende Januar 2027»)</span>
+    <div class="row5">
+      <label>Erstkontakt<input id="c-t-erstkontakt"></label>
+      <label>Start Spezifizierung<input id="c-t-start"></label>
+      <label>Milestone 1<input id="c-t-m1"></label>
+      <label>Abschluss geplant<input id="c-t-abschluss_geplant"></label>
+      <label>Abschluss<input id="c-t-abschluss"></label>
+    </div>
+  </div>
   <div class="field"><label for="c-ergebnis">Ergebnis / Link (sobald geteilt)</label><input id="c-ergebnis" placeholder="https://…"></div>
   <fieldset class="intern" id="c-intern">
     <legend>Intern <span>nur für angemeldete Teammitglieder, privates Repository</span></legend>
     <p class="hint" id="c-intern-off" hidden></p>
     <div id="c-intern-on" style="display:grid;gap:10px">
       <p class="hint" id="c-i-legacy" hidden></p>
+      <div class="row2">
+        <div class="field"><label for="c-i-status">Status / Handlungsbedarf</label><select id="c-i-status"><option value="">–</option><option value="ok">OK</option><option value="spaet">Spät</option><option value="kritisch">Kritisch</option><option value="absage">Absage begründen</option></select></div>
+        <div class="field"><label for="c-i-bewertung">Erfolg (1–5 Sterne)</label><select id="c-i-bewertung"><option value="0">–</option><option value="1">★</option><option value="2">★★</option><option value="3">★★★</option><option value="4">★★★★</option><option value="5">★★★★★</option></select></div>
+      </div>
       <div class="field"><label for="c-i-notiz">Interne Notizen</label><textarea id="c-i-notiz" placeholder="Absprachen, offene Punkte, nächste Schritte"></textarea></div>
       <div class="field"><span style="font-size:13.5px;font-weight:600">Aufwand</span>
         <table class="aufwand"><thead><tr><th>Datum</th><th class="h">Std.</th><th>Wer</th><th>Was</th><th></th></tr></thead><tbody id="c-i-rows"></tbody><tfoot><tr><td>Total</td><td class="h" id="c-i-total">0</td><td colspan="3"></td></tr></tfoot></table>
@@ -520,7 +544,9 @@ async function commitIntern(mutate, message){
 const internOf = id => (S.internOk && S.intern.notizen[id]) || null;
 const hours = n => (n||[]).reduce((t,a)=>t + (+a.stunden||0), 0);
 const fmtH = h => (Math.round(h*100)/100).toLocaleString("de-CH");
-const isEmptyIntern = n => !n || (!n.personen && !n.mail && !n.notiz && !(n.aufwand||[]).length);
+const isEmptyIntern = n => !n || (!n.personen && !n.mail && !n.notiz && !n.status && !n.bewertung && !(n.aufwand||[]).length);
+const STATUS = { ok:"OK", spaet:"Spät", kritisch:"Kritisch", absage:"Absage begründen" };
+const TERMINE = [["erstkontakt","Erstkontakt"],["start","Start Spezifizierung"],["m1","Milestone 1"],["abschluss_geplant","Abschluss geplant"],["abschluss","Abschluss"]];
 
 /* ---- Anmeldung ---- */
 async function login(token, remember){
@@ -555,7 +581,7 @@ function filtered(){
     (!state.stufe || b.stufe === state.stufe) &&
     (!state.bereich || (b.bereich||"") === state.bereich) &&
     (!state.schule || b.schule === state.schule) &&
-    (!q || [b.schule, SCHULEN[b.schule], b.gruppe, b.thema, BEREICHE[b.bereich||""], b.notiz, b.hintergrund, ...(b.lehrpersonen||[]).map(l=>l.vorname+" "+l.name)].join(" ").toLowerCase().includes(q)));
+    (!q || [b.schule, SCHULEN[b.schule], b.gruppe, b.thema, BEREICHE[b.bereich||""], b.notiz, b.hintergrund, b.begleitperson, ...(b.lehrpersonen||[]).map(l=>l.vorname+" "+l.name)].join(" ").toLowerCase().includes(q)));
 }
 function stepsMini(b, col){
   if (col.schritte.length < 2) return "";
@@ -574,7 +600,7 @@ function card(b){
   const schule = SCHULEN[b.schule] ? `<abbr title="${esc(SCHULEN[b.schule])}">${esc(b.schule)}</abbr>` : esc(b.schule);
   const z = ZIELGRUPPEN[b.ziel||""];
   return `<article class="card" data-id="${esc(b.id)}" style="--st:${stVar(col.id)}" tabindex="0" role="button" ${editing() ? 'draggable="true" aria-label="Karte bearbeiten: '+esc(b.thema)+'"' : 'aria-label="Details: '+esc(b.thema)+'"'}>
-    ${(() => { const n = internOf(b.id); if (isEmptyIntern(n)) return ""; const h = hours(n.aufwand); return `<span class="ibadge">Intern${h ? ` · ${fmtH(h)} Std.` : ""}</span>`; })()}
+    ${(() => { const n = internOf(b.id); if (isEmptyIntern(n)) return ""; const h = hours(n.aufwand); const st = n.status && n.status !== "ok" ? n.status : ""; return `<span class="ibadge ${st}">Intern${st ? ` · ${STATUS[st]}` : ""}${h ? ` · ${fmtH(h)} Std.` : ""}</span>`; })()}
     <div class="top"><span>${schule}</span><span class="stufe ${esc(b.stufe)}" title="${b.stufe==="BB"?"Berufsbildung":"Mittelschule"}">${esc(b.stufe)}</span></div>
     <h4>${esc(b.thema)}</h4>
     <div class="grp">${esc(b.gruppe)}</div>
@@ -700,13 +726,15 @@ function openCard(id){
   F("thema").value = b?.thema || ""; F("bereich").value = b?.bereich || ""; F("ziel").value = b?.ziel || "";
   F("phase").value = b?.phase || "0"; F("notiz").value = b?.notiz || ""; F("ergebnis").value = b?.ergebnis || "";
   F("hintergrund").value = b?.hintergrund || "";
+  F("begleitperson").value = b?.begleitperson || "";
+  TERMINE.forEach(([k]) => F("t-" + k).value = (b?.termine || {})[k] || "");
   F("lp").innerHTML = ""; (b?.lehrpersonen || []).forEach(l => lpRow(l)); if (!(b?.lehrpersonen||[]).length) lpRow();
   const del = F("del"); del.hidden = !b; del.textContent = "Löschen"; del.dataset.armed = "";
   F("err").hidden = true;
   const n = (b && internOf(b.id)) || {};
-  S.draft = { personen:n.personen||"", mail:n.mail||"", notiz:n.notiz||"", aufwand:(n.aufwand||[]).map(a=>({...a})) };
+  S.draft = { personen:n.personen||"", mail:n.mail||"", notiz:n.notiz||"", status:n.status||"", bewertung:+n.bewertung||0, aufwand:(n.aufwand||[]).map(a=>({...a})) };
   S.draftOrig = JSON.stringify(S.draft);
-  F("i-notiz").value = S.draft.notiz;
+  F("i-notiz").value = S.draft.notiz; F("i-status").value = S.draft.status; F("i-bewertung").value = String(S.draft.bewertung);
   const legacy = [S.draft.personen, S.draft.mail].filter(Boolean).join(" · ");
   F("i-legacy").hidden = !legacy; F("i-legacy").textContent = legacy ? "Früher intern erfasst (bitte bei Bedarf oben unter «Beteiligte Lehrpersonen» übernehmen): " + legacy : "";
   F("a-datum").value = today(); F("a-std").value = ""; F("a-wer").value = S.user && S.user !== "Team" ? S.user : ""; F("a-was").value = "";
@@ -742,6 +770,8 @@ function openInfo(id){
     <div class="meta"><span class="chip">${esc(BEREICHE[b.bereich||""])}</span>${b.ziel ? `<span class="chip">für ${esc(ZIELGRUPPEN[b.ziel])}</span>` : ""}</div>
     <section><h3>Hintergrund</h3>${b.hintergrund ? `<p class="info-text">${esc(b.hintergrund)}</p>` : `<p class="info-text empty">Hintergrundinformationen folgen.</p>`}</section>
     ${b.notiz ? `<section><h3>Aktuell</h3><p>${esc(b.notiz)}</p></section>` : ""}
+    ${(() => { const t = b.termine || {}; const items = TERMINE.filter(([k]) => t[k]); return items.length ? `<section><h3>Zeitplan</h3><dl class="termine">${items.map(([k,l])=>`<div><dt>${l}</dt><dd>${esc(t[k])}</dd></div>`).join("")}</dl></section>` : ""; })()}
+    ${b.begleitperson ? `<section><h3>Begleitung DLH</h3><p>${esc(b.begleitperson)}</p></section>` : ""}
     ${lps.length ? `<section><h3>Beteiligte Lehrpersonen</h3><ul class="lp-list">${lps.map(l=>`<li><b>${esc([l.vorname,l.name].filter(Boolean).join(" "))}</b>${mailOk(l.mail) ? `<a href="mailto:${esc(l.mail)}">${esc(l.mail)}</a>` : (l.mail ? `<span>${esc(l.mail)}</span>` : "")}</li>`).join("")}</ul></section>` : ""}
     ${b.ergebnis ? `<section><h3>Ergebnis</h3>${ergebnis(b)}</section>` : ""}`;
   if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
@@ -784,17 +814,19 @@ $("#f-card").addEventListener("submit", async e => {
     bereich:F("bereich").value, ziel:F("ziel").value, phase:F("phase").value,
     notiz:F("notiz").value.trim(), ergebnis:F("ergebnis").value.trim(),
     hintergrund:F("hintergrund").value.trim(), lehrpersonen:readLps(),
+    begleitperson:F("begleitperson").value,
+    termine:Object.fromEntries(TERMINE.map(([k]) => [k, F("t-" + k).value.trim()]).filter(([,v]) => v)),
   };
   const bad = v.lehrpersonen.find(l => l.mail && !mailOk(l.mail));
   if (bad) { F("err").hidden = false; F("err").textContent = `Bitte E-Mail-Adresse prüfen: «${bad.mail}».`; return; }
-  Object.assign(S.draft, { notiz:F("i-notiz").value.trim() });
+  Object.assign(S.draft, { notiz:F("i-notiz").value.trim(), status:F("i-status").value, bewertung:+F("i-bewertung").value });
   const internChanged = S.internOk && JSON.stringify(S.draft) !== S.draftOrig;
   const draft = { ...S.draft, aufwand:[...S.draft.aufwand] };
   const btn = F("save"); btn.disabled = true; btn.textContent = "Speichere …";
   let ok = true, id = S.editId;
   if (id) {
     const old = all().find(y=>y.id===id) || {};
-    const pubChanged = Object.keys(v).some(k => JSON.stringify(old[k] ?? (Array.isArray(v[k]) ? [] : "")) !== JSON.stringify(v[k]));
+    const pubChanged = Object.keys(v).some(k => JSON.stringify(old[k] ?? (Array.isArray(v[k]) ? [] : (v[k] && typeof v[k] === "object") ? {} : "")) !== JSON.stringify(v[k]));
     if (pubChanged) ok = await commit(list => { const x = list.find(y=>y.id===id); if (!x) return; const colBefore = colOf(x).id; Object.assign(x, v); if (colOf(x).id !== colBefore) delete x.ordnung; }, `Karte «${v.thema}» bearbeitet`);
   } else {
     id = v.stufe.toLowerCase() + Date.now().toString(36);
@@ -836,6 +868,7 @@ $("#f-login").addEventListener("submit", async e => {
 document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
 
 /* ---- Statische Teile ---- */
+F("begleitperson").innerHTML = '<option value="">–</option>' + TEAM.map(([n])=>`<option>${esc(n)}</option>`).join("");
 F("bereich").innerHTML = Object.entries(BEREICHE).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("");
 F("ziel").innerHTML = Object.entries(ZIELGRUPPEN).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("");
 F("phase").innerHTML = SPALTEN.map(s => `<optgroup label="${esc(s.name)}">${s.schritte.map(p=>`<option value="${p}">${esc(PHASEN[p])}</option>`).join("")}</optgroup>`).join("");

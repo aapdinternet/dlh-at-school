@@ -32,7 +32,7 @@ Das Token nie weitergeben und nicht in Dateien speichern. Bei Verlust auf GitHub
 
 ## Interne Notizen (privates Repository)
 
-Jede Karte hat im Bearbeitungsformular einen Bereich «Intern»: interne Notizen und Aufwand (Datum, Stunden, wer, was, mit Total). Diese Angaben liegen nicht in diesem öffentlichen Repository, sondern in einem zweiten, privaten Repository und sind nur nach «Team-Login» sichtbar.
+Jede Karte hat im Bearbeitungsformular einen Bereich «Intern»: Status/Handlungsbedarf (OK, Spät, Kritisch, Absage begründen), Erfolg (1–5 Sterne), interne Notizen und Aufwand (Datum, Stunden, wer, was, mit Total). Diese Angaben liegen nicht in diesem öffentlichen Repository, sondern in einem zweiten, privaten Repository und sind nur nach «Team-Login» sichtbar.
 
 Einrichten (einmalig, Repository-Inhaber):
 
@@ -58,5 +58,5 @@ Das Repository ist öffentlich, inklusive aller früheren Versionen. Namen und E
 ## Aufbau der Karten (data/begleitungen.json)
 
 - Spalten = Phasen aus der Planungsübersicht: Anfrage · Spezifizieren & bauen · Testen & verbessern · Im Unterricht · Abgeschlossen.
-- Felder: `stufe` (BB/MS), `schule` (Kürzel), `gruppe`, `thema`, `bereich` (1a, 1b, 2, 3 oder leer), `ziel` (LP, SuS, beide oder leer), `phase` (0, 1.1, 1.2, M1, 2.1, 2.2, M2, 3.1, 3.2, M3, 3.3, abschluss), `notiz` (öffentlich), `hintergrund` (öffentlich, ein paar Sätze), `lehrpersonen` (öffentlich, Liste mit `vorname`, `name`, `mail`), `ergebnis` (Link, sobald geteilt), `ordnung` (Reihenfolge in der Spalte, wird beim Ziehen gesetzt).
+- Felder: `stufe` (BB/MS), `schule` (Kürzel), `gruppe`, `thema`, `bereich` (1a, 1b, 2, 3 oder leer), `ziel` (LP, SuS, beide oder leer), `phase` (0, 1.1, 1.2, M1, 2.1, 2.2, M2, 3.1, 3.2, M3, 3.3, abschluss), `notiz` (öffentlich), `hintergrund` (öffentlich, ein paar Sätze), `lehrpersonen` (öffentlich, Liste mit `vorname`, `name`, `mail`), `begleitperson` (DLH, öffentlich), `termine` (öffentlich: `erstkontakt`, `start`, `m1`, `abschluss_geplant`, `abschluss` als Text), `ergebnis` (Link, sobald geteilt), `ordnung` (Reihenfolge in der Spalte, wird beim Ziehen gesetzt).
 - Schulkürzel ausschreiben: in `index.html` bei `SCHULEN`.
