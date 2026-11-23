@@ -9,10 +9,10 @@
       "bereich": "3",
       "ziel": "beide",
       "thema": "Mathematik-Tutor Kochen",
-      "phase": "abschluss",
+      "phase": "2.1",
       "notiz": "Im Test-Einsatz an der Schule",
       "ergebnis": "",
-      "ordnung": 10
+      "ordnung": 20
     },
     {
       "id": "bb02",
@@ -37,7 +37,7 @@
       "phase": "2.2",
       "notiz": "Im Einsatz an der Schule",
       "ergebnis": "",
-      "ordnung": 20
+      "ordnung": 10
     },
     {
       "id": "bb04",
