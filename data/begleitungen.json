@@ -47,10 +47,10 @@
       "bereich": "1b",
       "ziel": "beide",
       "thema": "Interviews vorbereiten und auswerten",
-      "phase": "2.1",
+      "phase": "1.1",
       "notiz": "Soll als Modell für weitere Schulen dienen",
       "ergebnis": "",
-      "ordnung": 20
+      "ordnung": 40
     },
     {
       "id": "bb05",
@@ -139,7 +139,7 @@
       "phase": "1.2",
       "notiz": "",
       "ergebnis": "",
-      "ordnung": 30
+      "ordnung": 20
     },
     {
       "id": "ms12",
@@ -164,7 +164,7 @@
       "phase": "1.1",
       "notiz": "",
       "ergebnis": "",
-      "ordnung": 20
+      "ordnung": 10
     },
     {
       "id": "ms14",
@@ -189,7 +189,7 @@
       "phase": "1.1",
       "notiz": "",
       "ergebnis": "",
-      "ordnung": 40
+      "ordnung": 30
     },
     {
       "id": "ms16",
