@@ -191,6 +191,37 @@ dialog h2{font-size:21px}
 .ibadge{display:none;font:700 11.5px var(--body);color:var(--violet);background:var(--violet-soft);padding:2px 6px;align-self:flex-start}
 body.editing .ibadge{display:inline-block}
 @media (max-width:560px){.addrow{grid-template-columns:1fr 1fr}}
+/* Detail-Pop-up */
+.card{cursor:pointer}
+.card .more{margin-left:auto;font-size:12.5px;color:var(--accent);font-weight:700;white-space:nowrap;align-self:center}
+#rows tr[data-id]{cursor:pointer}
+#rows tr[data-id]:hover td{background:var(--sunk)}
+dialog.info-dlg{width:min(720px,calc(100vw - 24px))}
+.info-head{background:var(--grad);color:#fff;padding:18px 22px 16px;position:relative}
+.info-head .top{display:flex;gap:8px;align-items:center;font-size:14px;opacity:.95;padding-right:36px}
+.info-head .stufe{background:rgba(255,255,255,.22);color:#fff}
+.info-head h2{font-size:26px;line-height:1.15;margin-top:6px;color:#fff}
+.info-head .grp{font-size:16px;margin-top:2px}
+.info-x{position:absolute;top:10px;right:12px;border:0;background:none;color:#fff;font:400 30px/1 var(--body);cursor:pointer;padding:4px 8px}
+.info-body{padding:18px 22px 6px;display:grid;gap:16px}
+.info-body h3{font-size:15px;margin-bottom:4px}
+.info-body p{margin:0}
+.info-phase{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:14.5px}
+.info-phase .ph{display:inline-flex;align-items:center;gap:7px;font-weight:700}
+.info-phase .ph::before{content:"";width:12px;height:12px;background:var(--st)}
+.info-text{font-size:16px;line-height:1.55;white-space:pre-line}
+.info-text.empty{color:var(--muted);font-style:italic}
+.lp-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.lp-list li{background:var(--sunk);padding:8px 12px;border-left:4px solid var(--violet);display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline}
+.lp-list b{font-weight:900}
+.lp-list a{color:var(--accent);overflow-wrap:anywhere}
+.info-foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding:12px 22px 18px}
+/* Lehrpersonen im Formular */
+.lp-rows{display:grid;gap:6px}
+.lp-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.4fr) auto;gap:6px;align-items:center}
+.lp-row input{font:inherit;font-size:14.5px;color:var(--fg);background:var(--bg);border:1px solid var(--line);padding:7px 9px;min-width:0;width:100%}
+.lp-row button{border:0;background:none;color:#B3261E;font:700 18px var(--body);cursor:pointer;padding:0 6px}
+@media (max-width:560px){.lp-row{grid-template-columns:1fr 1fr auto}.lp-row input[type=email]{grid-column:1/3}}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:14px;z-index:50}
 @media (max-width:560px){.row2{grid-template-columns:1fr}}
 </style>
@@ -287,13 +318,18 @@ body.editing .ibadge{display:inline-block}
 
 <dialog id="dlg-card"><form method="dialog" id="f-card">
   <h2 id="c-title">Neue Anfrage</h2>
-  <p class="warn">Die Felder oben sind öffentlich sichtbar: keine Namen von Lehrpersonen, keine Kontaktdaten. Diese gehören in den Bereich «Intern» unten.</p>
+  <p class="warn">Die Angaben oben sind öffentlich sichtbar, auch Namen und E-Mail-Adressen der Lehrpersonen. Bitte nur mit deren Einverständnis erfassen. Notizen und Aufwand gehören in den Bereich «Intern» unten.</p>
   <div class="row2">
     <div class="field"><label for="c-stufe">Stufe *</label><select id="c-stufe"><option value="BB">Berufsbildung (BB)</option><option value="MS">Mittelschule (MS)</option></select></div>
     <div class="field"><label for="c-schule">Schule (Kürzel) *</label><input id="c-schule" required list="schulen" autocomplete="off" placeholder="z. B. KWI"></div>
   </div>
   <div class="field"><label for="c-gruppe">Fachgruppe *</label><input id="c-gruppe" required placeholder="z. B. Biologie"></div>
   <div class="field"><label for="c-thema">Thema *</label><input id="c-thema" required placeholder="z. B. Übungs-Assistent indirekte Rede"></div>
+  <div class="field"><label for="c-hintergrund">Hintergrund (öffentlich, ein paar Sätze)</label><textarea id="c-hintergrund" maxlength="900" rows="4" placeholder="Ausgangslage, Ziel und was der KI-Assistent kann – kurz und gebündelt"></textarea></div>
+  <div class="field"><span style="font-size:13.5px;font-weight:600">Beteiligte Lehrpersonen (öffentlich)</span>
+    <div class="lp-rows" id="c-lp"></div>
+    <div><button type="button" class="btn" id="c-lp-add">+ Lehrperson hinzufügen</button></div>
+  </div>
   <div class="row2">
     <div class="field"><label for="c-bereich">Bereich</label><select id="c-bereich"></select></div>
     <div class="field"><label for="c-ziel">Für</label><select id="c-ziel"></select></div>
@@ -305,10 +341,7 @@ body.editing .ibadge{display:inline-block}
     <legend>Intern <span>nur für angemeldete Teammitglieder, privates Repository</span></legend>
     <p class="hint" id="c-intern-off" hidden></p>
     <div id="c-intern-on" style="display:grid;gap:10px">
-      <div class="row2">
-        <div class="field"><label for="c-i-personen">Beteiligte Personen</label><textarea id="c-i-personen" placeholder="Name, Funktion – eine Person pro Zeile"></textarea></div>
-        <div class="field"><label for="c-i-mail">E-Mail-Adressen</label><textarea id="c-i-mail" placeholder="eine Adresse pro Zeile"></textarea></div>
-      </div>
+      <p class="hint" id="c-i-legacy" hidden></p>
       <div class="field"><label for="c-i-notiz">Interne Notizen</label><textarea id="c-i-notiz" placeholder="Absprachen, offene Punkte, nächste Schritte"></textarea></div>
       <div class="field"><span style="font-size:13.5px;font-weight:600">Aufwand</span>
         <table class="aufwand"><thead><tr><th>Datum</th><th class="h">Std.</th><th>Wer</th><th>Was</th><th></th></tr></thead><tbody id="c-i-rows"></tbody><tfoot><tr><td>Total</td><td class="h" id="c-i-total">0</td><td colspan="3"></td></tr></tfoot></table>
@@ -325,6 +358,20 @@ body.editing .ibadge{display:inline-block}
   <p class="err" id="c-err" hidden></p>
   <div class="actions"><button type="button" class="btn-danger" id="c-del">Löschen</button><div class="right"><button type="button" class="btn" data-close>Abbrechen</button><button class="btn-primary" type="submit" id="c-save">Speichern</button></div></div>
 </form></dialog>
+<dialog id="dlg-info" class="info-dlg" aria-labelledby="i-title">
+  <div class="info-head" id="i-head">
+    <div class="top" id="i-top"></div>
+    <h2 id="i-title"></h2>
+    <div class="grp" id="i-grp"></div>
+    <button type="button" class="info-x" id="i-x" aria-label="Schliessen">×</button>
+  </div>
+  <div class="info-body" id="i-body"></div>
+  <div class="info-foot">
+    <button type="button" class="btn" id="i-link">Link kopieren</button>
+    <button type="button" class="btn-primary editonly" id="i-edit">Bearbeiten</button>
+    <button type="button" class="btn" id="i-close">Schliessen</button>
+  </div>
+</dialog>
 <datalist id="schulen"></datalist>
 <div class="toast" id="toast" hidden role="status"></div>
 <script>
@@ -523,7 +570,7 @@ function filtered(){
     (!state.stufe || b.stufe === state.stufe) &&
     (!state.bereich || (b.bereich||"") === state.bereich) &&
     (!state.schule || b.schule === state.schule) &&
-    (!q || [b.schule, SCHULEN[b.schule], b.gruppe, b.thema, BEREICHE[b.bereich||""], b.notiz].join(" ").toLowerCase().includes(q)));
+    (!q || [b.schule, SCHULEN[b.schule], b.gruppe, b.thema, BEREICHE[b.bereich||""], b.notiz, b.hintergrund, ...(b.lehrpersonen||[]).map(l=>l.vorname+" "+l.name)].join(" ").toLowerCase().includes(q)));
 }
 function stepsMini(b, col){
   if (col.schritte.length < 2) return "";
@@ -541,7 +588,7 @@ function card(b){
   const col = colOf(b);
   const schule = SCHULEN[b.schule] ? `<abbr title="${esc(SCHULEN[b.schule])}">${esc(b.schule)}</abbr>` : esc(b.schule);
   const z = ZIELGRUPPEN[b.ziel||""];
-  return `<article class="card" data-id="${esc(b.id)}" style="--st:${stVar(col.id)}" ${editing() ? 'draggable="true" tabindex="0" role="button" aria-label="Karte bearbeiten: '+esc(b.thema)+'"' : ""}>
+  return `<article class="card" data-id="${esc(b.id)}" style="--st:${stVar(col.id)}" tabindex="0" role="button" ${editing() ? 'draggable="true" aria-label="Karte bearbeiten: '+esc(b.thema)+'"' : 'aria-label="Details: '+esc(b.thema)+'"'}>
     ${(() => { const n = internOf(b.id); if (isEmptyIntern(n)) return ""; const h = hours(n.aufwand); return `<span class="ibadge">Intern${h ? ` · ${fmtH(h)} Std.` : ""}</span>`; })()}
     <div class="top"><span>${schule}</span><span class="stufe ${esc(b.stufe)}" title="${b.stufe==="BB"?"Berufsbildung":"Mittelschule"}">${esc(b.stufe)}</span></div>
     <h4>${esc(b.thema)}</h4>
@@ -549,7 +596,7 @@ function card(b){
     ${stepsMini(b, col)}
     ${b.notiz ? `<div class="note">${esc(b.notiz)}</div>` : ""}
     ${ergebnis(b)}
-    <div class="meta"><span class="chip">${esc(BEREICHE[b.bereich||""])}</span>${b.ziel ? `<span class="chip">für ${esc(z)}</span>` : ""}</div>
+    <div class="meta"><span class="chip">${esc(BEREICHE[b.bereich||""])}</span>${b.ziel ? `<span class="chip">für ${esc(z)}</span>` : ""}<span class="more" aria-hidden="true">Details ›</span></div>
   </article>`;
 }
 function renderOverview(list){
@@ -584,7 +631,7 @@ function render(){
     </section>`;
   }).join("");
   $("#rows").innerHTML = [...list].sort((a,b)=> ORDER.indexOf(b.phase)-ORDER.indexOf(a.phase) || a.schule.localeCompare(b.schule))
-    .map(b => `<tr><td><span class="stufe ${esc(b.stufe)}">${esc(b.stufe)}</span></td><td>${esc(b.schule)}</td><td>${esc(b.gruppe)}</td>
+    .map(b => `<tr data-id="${esc(b.id)}" tabindex="0"><td><span class="stufe ${esc(b.stufe)}">${esc(b.stufe)}</span></td><td>${esc(b.schule)}</td><td>${esc(b.gruppe)}</td>
       <td class="thema">${esc(b.thema)}${b.notiz?`<div class="note">${esc(b.notiz)}</div>`:""}</td>
       <td>${esc(BEREICHE[b.bereich||""])}</td><td>${b.ziel ? esc(ZIELGRUPPEN[b.ziel]) : "–"}</td>
       <td><span class="ph" style="--st:${stVar(colOf(b).id)}">${esc(PHASEN[b.phase]||b.phase)}</span></td></tr>`).join("")
@@ -667,12 +714,16 @@ function openCard(id){
   F("stufe").value = b?.stufe || "MS"; F("schule").value = b?.schule || ""; F("gruppe").value = b?.gruppe || "";
   F("thema").value = b?.thema || ""; F("bereich").value = b?.bereich || ""; F("ziel").value = b?.ziel || "";
   F("phase").value = b?.phase || "0"; F("notiz").value = b?.notiz || ""; F("ergebnis").value = b?.ergebnis || "";
+  F("hintergrund").value = b?.hintergrund || "";
+  F("lp").innerHTML = ""; (b?.lehrpersonen || []).forEach(l => lpRow(l)); if (!(b?.lehrpersonen||[]).length) lpRow();
   const del = F("del"); del.hidden = !b; del.textContent = "Löschen"; del.dataset.armed = "";
   F("err").hidden = true;
   const n = (b && internOf(b.id)) || {};
   S.draft = { personen:n.personen||"", mail:n.mail||"", notiz:n.notiz||"", aufwand:(n.aufwand||[]).map(a=>({...a})) };
   S.draftOrig = JSON.stringify(S.draft);
-  F("i-personen").value = S.draft.personen; F("i-mail").value = S.draft.mail; F("i-notiz").value = S.draft.notiz;
+  F("i-notiz").value = S.draft.notiz;
+  const legacy = [S.draft.personen, S.draft.mail].filter(Boolean).join(" · ");
+  F("i-legacy").hidden = !legacy; F("i-legacy").textContent = legacy ? "Früher intern erfasst (bitte bei Bedarf oben unter «Beteiligte Lehrpersonen» übernehmen): " + legacy : "";
   F("a-datum").value = today(); F("a-std").value = ""; F("a-wer").value = S.user && S.user !== "Team" ? S.user : ""; F("a-was").value = "";
   F("intern-on").hidden = !S.internOk; F("intern-off").hidden = S.internOk; F("intern-off").textContent = S.internMsg;
   renderAufwand();
@@ -692,9 +743,54 @@ F("a-add").addEventListener("click", () => {
   F("a-std").value = ""; F("a-was").value = ""; renderAufwand();
 });
 F("i-rows").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (!b) return; S.draft.aufwand.splice(+b.dataset.i,1); renderAufwand(); });
+/* ---- Detail-Pop-up ---- */
+const mailOk = m => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m||"");
+function openInfo(id){
+  const b = all().find(x=>x.id===id); if (!b) return;
+  const col = colOf(b), d = $("#dlg-info");
+  d.dataset.id = id; d.style.setProperty("--st", stVar(col.id));
+  $("#i-top").innerHTML = `<span>${esc(SCHULEN[b.schule] ? `${b.schule} – ${SCHULEN[b.schule]}` : b.schule)}</span><span class="stufe">${esc(b.stufe)}</span><span>${b.stufe==="BB"?"Berufsbildung":"Mittelschule"}</span>`;
+  $("#i-title").textContent = b.thema; $("#i-grp").textContent = b.gruppe;
+  const lps = (b.lehrpersonen||[]).filter(l => l.vorname || l.name || l.mail);
+  $("#i-body").innerHTML = `
+    <div class="info-phase"><span class="ph">${esc(col.name)}</span>${col.schritte.length > 1 ? stepsMini(b,col) : ""}</div>
+    <div class="meta"><span class="chip">${esc(BEREICHE[b.bereich||""])}</span>${b.ziel ? `<span class="chip">für ${esc(ZIELGRUPPEN[b.ziel])}</span>` : ""}</div>
+    <section><h3>Hintergrund</h3>${b.hintergrund ? `<p class="info-text">${esc(b.hintergrund)}</p>` : `<p class="info-text empty">Hintergrundinformationen folgen.</p>`}</section>
+    ${b.notiz ? `<section><h3>Aktuell</h3><p>${esc(b.notiz)}</p></section>` : ""}
+    ${lps.length ? `<section><h3>Beteiligte Lehrpersonen</h3><ul class="lp-list">${lps.map(l=>`<li><b>${esc([l.vorname,l.name].filter(Boolean).join(" "))}</b>${mailOk(l.mail) ? `<a href="mailto:${esc(l.mail)}">${esc(l.mail)}</a>` : (l.mail ? `<span>${esc(l.mail)}</span>` : "")}</li>`).join("")}</ul></section>` : ""}
+    ${b.ergebnis ? `<section><h3>Ergebnis</h3>${ergebnis(b)}</section>` : ""}`;
+  if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+  if (!d.open) d.showModal();
+}
+function closeInfo(){ const d = $("#dlg-info"); if (d.open) d.close(); }
+$("#dlg-info").addEventListener("close", () => { if (location.hash) history.replaceState(null, "", location.pathname + location.search); });
+$("#dlg-info").addEventListener("click", e => { if (e.target === e.currentTarget) closeInfo(); });  // Klick neben das Fenster
+$("#i-x").addEventListener("click", closeInfo); $("#i-close").addEventListener("click", closeInfo);
+$("#i-edit").addEventListener("click", () => { const id = $("#dlg-info").dataset.id; closeInfo(); if (S.token) openCard(id); });
+$("#i-link").addEventListener("click", async () => {
+  const url = location.origin + location.pathname + "#" + $("#dlg-info").dataset.id, btn = $("#i-link");
+  try { await navigator.clipboard.writeText(url); btn.textContent = "Kopiert"; } catch { prompt("Link zu dieser Begleitung:", url); }
+  setTimeout(()=>btn.textContent = "Link kopieren", 2500);
+});
+$("#rows").addEventListener("click", e => { const r = e.target.closest("tr[data-id]"); if (r && !e.target.closest("a")) openInfo(r.dataset.id); });
+$("#rows").addEventListener("keydown", e => { const r = e.target.closest("tr[data-id]"); if (r && (e.key==="Enter"||e.key===" ")) { e.preventDefault(); openInfo(r.dataset.id); } });
+window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (id && all().some(b=>b.id===id)) openInfo(id); });
+
+/* ---- Lehrpersonen im Formular ---- */
+function lpRow(l = {}){
+  const r = document.createElement("div"); r.className = "lp-row";
+  r.innerHTML = `<input placeholder="Vorname" aria-label="Vorname" data-k="vorname" value="${esc(l.vorname)}"><input placeholder="Name" aria-label="Name" data-k="name" value="${esc(l.name)}"><input type="email" placeholder="E-Mail" aria-label="E-Mail" data-k="mail" value="${esc(l.mail)}"><button type="button" aria-label="Lehrperson entfernen">×</button>`;
+  r.querySelector("button").addEventListener("click", () => r.remove());
+  F("lp").appendChild(r); return r;
+}
+F("lp-add").addEventListener("click", () => lpRow().querySelector("input").focus());
+const readLps = () => [...F("lp").querySelectorAll(".lp-row")].map(r => {
+  const o = {}; r.querySelectorAll("input").forEach(i => o[i.dataset.k] = i.value.trim()); return o;
+}).filter(l => l.vorname || l.name || l.mail);
+
 $("#new").addEventListener("click", () => openCard(null));
-$("#cols").addEventListener("click", e => { const c = e.target.closest(".card"); if (c && S.token && !e.target.closest("a")) openCard(c.dataset.id); });
-$("#cols").addEventListener("keydown", e => { const c = e.target.closest(".card"); if (c && S.token && (e.key==="Enter"||e.key===" ")) { e.preventDefault(); openCard(c.dataset.id); } });
+$("#cols").addEventListener("click", e => { const c = e.target.closest(".card"); if (!c || e.target.closest("a")) return; S.token ? openCard(c.dataset.id) : openInfo(c.dataset.id); });
+$("#cols").addEventListener("keydown", e => { const c = e.target.closest(".card"); if (c && (e.key==="Enter"||e.key===" ")) { e.preventDefault(); S.token ? openCard(c.dataset.id) : openInfo(c.dataset.id); } });
 
 $("#f-card").addEventListener("submit", async e => {
   e.preventDefault();
@@ -702,15 +798,18 @@ $("#f-card").addEventListener("submit", async e => {
     stufe:F("stufe").value, schule:F("schule").value.trim(), gruppe:F("gruppe").value.trim(), thema:F("thema").value.trim(),
     bereich:F("bereich").value, ziel:F("ziel").value, phase:F("phase").value,
     notiz:F("notiz").value.trim(), ergebnis:F("ergebnis").value.trim(),
+    hintergrund:F("hintergrund").value.trim(), lehrpersonen:readLps(),
   };
-  Object.assign(S.draft, { personen:F("i-personen").value.trim(), mail:F("i-mail").value.trim(), notiz:F("i-notiz").value.trim() });
+  const bad = v.lehrpersonen.find(l => l.mail && !mailOk(l.mail));
+  if (bad) { F("err").hidden = false; F("err").textContent = `Bitte E-Mail-Adresse prüfen: «${bad.mail}».`; return; }
+  Object.assign(S.draft, { notiz:F("i-notiz").value.trim() });
   const internChanged = S.internOk && JSON.stringify(S.draft) !== S.draftOrig;
   const draft = { ...S.draft, aufwand:[...S.draft.aufwand] };
   const btn = F("save"); btn.disabled = true; btn.textContent = "Speichere …";
   let ok = true, id = S.editId;
   if (id) {
     const old = all().find(y=>y.id===id) || {};
-    const pubChanged = Object.keys(v).some(k => (old[k]||"") !== v[k]);
+    const pubChanged = Object.keys(v).some(k => JSON.stringify(old[k] ?? (Array.isArray(v[k]) ? [] : "")) !== JSON.stringify(v[k]));
     if (pubChanged) ok = await commit(list => { const x = list.find(y=>y.id===id); if (!x) return; const colBefore = colOf(x).id; Object.assign(x, v); if (colOf(x).id !== colBefore) delete x.ordnung; }, `Karte «${v.thema}» bearbeitet`);
   } else {
     id = v.stufe.toLowerCase() + Date.now().toString(36);
@@ -769,7 +868,7 @@ $("#copy").addEventListener("click", async () => {
   const t = recall(TOKEN_KEY);
   if (t) { try { await login(t, !!(()=>{try{return localStorage.getItem(TOKEN_KEY)}catch{return null}})()); return; } catch { store(TOKEN_KEY, null); S.token = null; } }
   await loadPublic(); render();
-})();
+})().then(() => { const id = location.hash.slice(1); if (id && all().some(b=>b.id===id)) openInfo(id); });
 </script>
 </body>
 </html>

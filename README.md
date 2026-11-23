@@ -32,7 +32,7 @@ Das Token nie weitergeben und nicht in Dateien speichern. Bei Verlust auf GitHub
 
 ## Interne Notizen (privates Repository)
 
-Jede Karte hat im Bearbeitungsformular einen Bereich «Intern»: beteiligte Personen, E-Mail-Adressen, interne Notizen und Aufwand (Datum, Stunden, wer, was, mit Total). Diese Angaben liegen nicht in diesem öffentlichen Repository, sondern in einem zweiten, privaten Repository und sind nur nach «Team-Login» sichtbar.
+Jede Karte hat im Bearbeitungsformular einen Bereich «Intern»: interne Notizen und Aufwand (Datum, Stunden, wer, was, mit Total). Diese Angaben liegen nicht in diesem öffentlichen Repository, sondern in einem zweiten, privaten Repository und sind nur nach «Team-Login» sichtbar.
 
 Einrichten (einmalig, Repository-Inhaber):
 
@@ -43,19 +43,20 @@ Einrichten (einmalig, Repository-Inhaber):
 
 Fehlt der Zugriff, zeigt das Formular einen Hinweis; die öffentlichen Felder lassen sich trotzdem bearbeiten.
 
-Datenschutz: Auch ein privates Repository liegt auf Servern von GitHub (USA). Ob Namen und E-Mail-Adressen von Lehrpersonen dort gespeichert werden dürfen, ist mit der Datenschutzstelle (IDG ZH) abzuklären.
+Beteiligte Lehrpersonen mit E-Mail-Adresse werden seit 23.11.2026 öffentlich auf der Karte geführt (Entscheid DLH, analog Innovationsfondsprojekte) – nur mit Einverständnis der Lehrpersonen erfassen.
 
 ## Wichtig zum Datenschutz
 
-Das Repository ist öffentlich, inklusive aller früheren Versionen. Deshalb gehören keine Namen von Lehrpersonen, keine E-Mail-Adressen und keine internen Notizen auf die Karten. Diese Angaben gehören in den Bereich «Intern» (privates Repository) oder in die Planungsübersicht.
+Das Repository ist öffentlich, inklusive aller früheren Versionen. Namen und E-Mail-Adressen der beteiligten Lehrpersonen sind öffentlich (nur mit deren Einverständnis); interne Notizen gehören nicht auf die Karten. Diese Angaben gehören in den Bereich «Intern» (privates Repository) oder in die Planungsübersicht.
 
 ## Hinweise
 
 - Nach dem Speichern sehen angemeldete Personen die Änderung sofort. Für Besucherinnen und Besucher kann es bis zu etwa 10 Minuten dauern (Zwischenspeicher von GitHub Pages).
+- Besucherinnen und Besucher öffnen mit Klick auf eine Karte (oder eine Zeile in der Liste) ein Fenster mit Hintergrund, Lehrpersonen und Ergebnis. Jede Karte hat einen eigenen Link, z. B. `…/dlh-at-school/#bb01`.
 - Karten ziehen funktioniert mit der Maus: innerhalb einer Spalte, um die Reihenfolge zu ändern (eine Linie zeigt, wo die Karte landet), oder in eine andere Spalte. Dort landet sie im ersten Schritt der Spalte. Den genauen Schritt (z. B. «Optimierungen») im Formular wählen. Auf Tablet und Handy die Karte antippen und den Schritt im Formular ändern.
 
 ## Aufbau der Karten (data/begleitungen.json)
 
 - Spalten = Phasen aus der Planungsübersicht: Anfrage · Spezifizieren & bauen · Testen & verbessern · Im Unterricht · Abgeschlossen.
-- Felder: `stufe` (BB/MS), `schule` (Kürzel), `gruppe`, `thema`, `bereich` (1a, 1b, 2, 3 oder leer), `ziel` (LP, SuS, beide oder leer), `phase` (0, 1.1, 1.2, M1, 2.1, 2.2, M2, 3.1, 3.2, M3, 3.3, abschluss), `notiz` (öffentlich), `ergebnis` (Link, sobald geteilt), `ordnung` (Reihenfolge in der Spalte, wird beim Ziehen gesetzt).
+- Felder: `stufe` (BB/MS), `schule` (Kürzel), `gruppe`, `thema`, `bereich` (1a, 1b, 2, 3 oder leer), `ziel` (LP, SuS, beide oder leer), `phase` (0, 1.1, 1.2, M1, 2.1, 2.2, M2, 3.1, 3.2, M3, 3.3, abschluss), `notiz` (öffentlich), `hintergrund` (öffentlich, ein paar Sätze), `lehrpersonen` (öffentlich, Liste mit `vorname`, `name`, `mail`), `ergebnis` (Link, sobald geteilt), `ordnung` (Reihenfolge in der Spalte, wird beim Ziehen gesetzt).
 - Schulkürzel ausschreiben: in `index.html` bei `SCHULEN`.
