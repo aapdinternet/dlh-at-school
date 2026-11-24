@@ -9,7 +9,7 @@
       "bereich": "3",
       "ziel": "beide",
       "thema": "Mathematik-Tutor Kochen",
-      "phase": "3.1",
+      "phase": "2.1",
       "notiz": "Im Test-Einsatz an der Schule",
       "ergebnis": "",
       "lehrpersonen": [
@@ -73,7 +73,8 @@
         "start": "21.08.2026",
         "m1": "16.09.2026"
       },
-      "begleitperson": "Pascal Schmidt"
+      "begleitperson": "Pascal Schmidt",
+      "ordnung": 20
     },
     {
       "id": "bb04",
@@ -129,7 +130,8 @@
         "start": "25.08.2026",
         "m1": "09.11.2026"
       },
-      "begleitperson": "Pascal Schmidt"
+      "begleitperson": "Pascal Schmidt",
+      "ordnung": 30
     },
     {
       "id": "bb06",
@@ -175,7 +177,8 @@
         "start": "03.07.2026",
         "m1": "18.09.2026"
       },
-      "begleitperson": "Pascal Schmidt"
+      "begleitperson": "Pascal Schmidt",
+      "ordnung": 40
     },
     {
       "id": "ms08",
@@ -199,7 +202,8 @@
         "erstkontakt": "August 2026",
         "m1": "29.09.2026"
       },
-      "begleitperson": "Pascal Schmidt"
+      "begleitperson": "Pascal Schmidt",
+      "ordnung": 50
     },
     {
       "id": "ms09",
@@ -227,7 +231,8 @@
       "termine": {
         "m1": "25.08.2026"
       },
-      "begleitperson": "Pascal Schmidt"
+      "begleitperson": "Pascal Schmidt",
+      "ordnung": 60
     },
     {
       "id": "ms10",
