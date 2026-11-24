@@ -109,6 +109,8 @@ ol.flow{background:var(--sunk);padding:4px 16px}
 ol.flow li:first-child{border-top:0}
 ol.flow li::before{counter-increment:s;content:counter(s);font:900 24px/1 var(--display);color:var(--st)}
 ol.flow b{display:block;font-family:var(--display);font-weight:900}
+ol.flow em{font:400 13px var(--body);color:var(--muted);margin-left:10px}
+.flow-sum{margin:-6px 0 12px;color:var(--muted);font-size:15px}
 ol.flow span{color:var(--muted);font-size:15.5px}
 .yesno{display:grid;gap:14px}
 .yesno div{background:var(--sunk);padding:14px 16px}
@@ -282,6 +284,7 @@ dialog.info-dlg{width:min(720px,calc(100vw - 24px))}
 <section class="info">
   <div class="steps">
     <h2>So läuft eine Begleitung</h2>
+    <p class="flow-sum">Ca. 3 Monate von der Anfrage bis zum Abschluss · insgesamt 3–5 Meetings</p>
     <ol class="flow" id="flow"></ol>
   </div>
   <div class="team">
@@ -408,24 +411,24 @@ const BEREICHE = {
 };
 const ZIELGRUPPEN = { "":"offen", LP:"Lehrpersonen", SuS:"Lernende", beide:"Lernende & Lehrpersonen" };
 const SPALTEN = [
-  { id:"anfrage",   name:"Anfrage",               hint:"Bedarf ist eingegangen, Erstgespräch wird vereinbart.", schritte:["0"] },
-  { id:"p1",        name:"Spezifizieren & bauen", hint:"Ziele klären, erster Prototyp (V1) entsteht.",          schritte:["1.1","1.2","M1"] },
-  { id:"p2",        name:"Testen & verbessern",   hint:"Prototyp gemeinsam besprechen und optimieren.",         schritte:["2.1","2.2","M2"] },
-  { id:"p3",        name:"Im Unterricht",          hint:"Version 2 im realen Einsatz, Feedback, Version 3.",     schritte:["3.1","3.2","M3","3.3"] },
-  { id:"abschluss", name:"Abgeschlossen",          hint:"Ausgewertet. Ergebnisse stehen allen Schulen offen.",   schritte:["abschluss"] },
+  { id:"anfrage",   name:"Anfrage",               hint:"Die Fachschaft stellt eine Anfrage, der Erstkontakt wird vereinbart.", schritte:["0"] },
+  { id:"p1",        name:"Spezifizieren & bauen", hint:"Phase 1 · 3–5 Wochen: Bedürfnisse und Ziele klären, der DLH entwickelt Prototyp V1.",          schritte:["1.1","1.2","M1"] },
+  { id:"p2",        name:"Testen & verbessern",   hint:"Phase 2 · ca. 4 Wochen: Die Fachschaft testet V1, der DLH optimiert zu V2.",         schritte:["2.1","2.2","M2"] },
+  { id:"p3",        name:"Im Unterricht",          hint:"Phase 3 · 4–6 Wochen: V2 im realen Unterricht, Feedback, V3. Mit Transferbegleitung.",     schritte:["3.1","3.2","M3","3.3"] },
+  { id:"abschluss", name:"Abgeschlossen",          hint:"Gemeinsame Evaluation. Ergebnisse stehen allen Schulen offen.",   schritte:["abschluss"] },
 ];
 const PHASEN = {
-  "0":"Anfrage", "1.1":"Spezifizierung", "1.2":"Entwicklung Prototyp", "M1":"Milestone 1",
-  "2.1":"Prototyp V1 besprechen", "2.2":"Optimierungen", "M2":"Milestone 2",
-  "3.1":"Go-Live V2", "3.2":"Feedback & Anpassungen", "M3":"Milestone 3", "3.3":"Go-Live V3",
+  "0":"Anfrage", "1.1":"Spezifizierung", "1.2":"Entwicklung Prototyp", "M1":"Milestone 1 · V1 liegt vor",
+  "2.1":"Prototyp V1 besprechen", "2.2":"Optimierungen", "M2":"Milestone 2 · V2 liegt vor",
+  "3.1":"Go-Live V2", "3.2":"Feedback, Anpassungen", "M3":"Milestone 3 · V3 liegt vor", "3.3":"Go-Live V3",
   "abschluss":"Abgeschlossen"
 };
 const ABLAUF = [
-  ["Anfrage & Erstgespräch","Eine Fachschaft meldet ihren Bedarf. Im Erstgespräch klären wir Thema, Ziele und Umfang; die Bereichsleitung Weiterbildung priorisiert.","anfrage"],
-  ["Spezifizieren & bauen","Gemeinsam halten wir fest, was der KI-Assistent können soll. Der DLH baut einen ersten Prototyp Version 1 auf Fobizz.","p1"],
-  ["Testen & verbessern","Die Gruppe probiert den Prototyp aus, wir besprechen ihn und verbessern ihn zu Version 2.","p2"],
-  ["Im Unterricht","Version 2 kommt im Unterricht zum Einsatz. Aus den Rückmeldungen entsteht Version 3.","p3"],
-  ["Abschluss & teilen","Wir werten die Zusammenarbeit aus. Gute Ergebnisse teilen wir mit allen Schulen.","abschluss"],
+  ["Anfrage & Erstgespräch","Eine Fachschaft meldet ihren Bedarf. Im Erstgespräch klären wir Thema, Ziele und Umfang; die Bereichsleitung Weiterbildung priorisiert.","anfrage","Start · Erstkontakt"],
+  ["Spezifizieren & bauen","Gemeinsam halten wir fest, was der KI-Assistent können soll. Der DLH baut einen ersten Prototyp Version 1 auf Fobizz.","p1","Phase 1 · 3–5 Wochen · 1–2 Meetings"],
+  ["Testen & verbessern","Die Gruppe probiert den Prototyp aus, wir besprechen ihn und verbessern ihn zu Version 2.","p2","Phase 2 · ca. 4 Wochen · Meetings nach Bedarf"],
+  ["Im Unterricht","Version 2 kommt im Unterricht zum Einsatz. Aus den Rückmeldungen entsteht Version 3. Der DLH begleitet den Transfer in den realen Unterricht.","p3","Phase 3 · 4–6 Wochen · Meetings nach Bedarf"],
+  ["Abschluss & teilen","Wir werten die Zusammenarbeit aus. Gute Ergebnisse teilen wir mit allen Schulen.","abschluss","Ende · 1 Meeting zur Evaluation"],
 ];
 const TEAM = [
   ["Michael Bozenicar","Service Koordinator"],
@@ -872,7 +875,7 @@ F("begleitperson").innerHTML = '<option value="">–</option>' + TEAM.map(([n])=
 F("bereich").innerHTML = Object.entries(BEREICHE).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("");
 F("ziel").innerHTML = Object.entries(ZIELGRUPPEN).map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join("");
 F("phase").innerHTML = SPALTEN.map(s => `<optgroup label="${esc(s.name)}">${s.schritte.map(p=>`<option value="${p}">${esc(PHASEN[p])}</option>`).join("")}</optgroup>`).join("");
-$("#flow").innerHTML = ABLAUF.map(([t,d,s]) => `<li style="--st:${stVar(s)}"><div><b>${t}</b><span>${d}</span></div></li>`).join("");
+$("#flow").innerHTML = ABLAUF.map(([t,d,s,m]) => `<li style="--st:${stVar(s)}"><div><b>${t}${m ? `<em>${m}</em>` : ""}</b><span>${d}</span></div></li>`).join("");
 $("#people").innerHTML = TEAM.map(([n,f])=>`<div class="person"><b>${esc(n)}</b><span>${esc(f)}</span></div>`).join("");
 $("#copy").addEventListener("click", async () => {
   const btn = $("#copy");
